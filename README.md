@@ -1,18 +1,52 @@
-## Getting Started
+# 🚲 CyclePro - Penjualan Sepeda 🚲 
 
-Welcome to the VS Code Java world. Here is a guideline to help you get started to write Java code in Visual Studio Code.
+---
 
-## Folder Structure
+## 📋 Deskripsi Project
 
-The workspace contains two folders by default, where:
+**CyclePro** adalah aplikasi manajemen penjualan sepeda berbasis Java yang dibangun menggunakan GUI Swing. Aplikasi ini dirancang untuk memudahkan toko sepeda dalam melakukan operasi sehari-hari, dari pengelolaan inventaris hingga transaksi penjualan.
 
-- `src`: the folder to maintain sources
-- `lib`: the folder to maintain dependencies
+---
 
-Meanwhile, the compiled output files will be generated in the `bin` folder by default.
+## 🛠️ Teknologi yang Digunakan
 
-> If you want to customize the folder structure, open `.vscode/settings.json` and update the related settings there.
+- **Java** - Bahasa pemrograman utama
+- **Java Swing** - Library GUI untuk antarmuka pengguna yang lebih modern dan kaya fitur, dibangun di atas AWT.
+- **Java AWT (Abstract Window Toolkit)** - Menyediakan dasar untuk GUI di Java, termasuk komponen dasar, grafis, dan manajemen event.
+- **Object-Oriented Programming** - Paradigma pemrograman
 
-## Dependency Management
+---
 
-The `JAVA PROJECTS` view allows you to manage your dependencies. More details can be found [here](https://github.com/microsoft/vscode-java-dependency#manage-dependencies).
+## 🧩 Komponen Utama
+
+### 1. Sistem Autentikasi
+- Form login dengan validasi username/password
+- Fitur "Lupa Password" dengan pertanyaan keamanan
+- Opsi pembuatan akun baru
+
+### 2. Dashboard
+- Tampilan inventaris sepeda
+- Ringkasan penjualan dan stok
+- Navigasi cepat ke semua fitur
+
+### 3. Manajemen Transaksi
+- Pencatatan penjualan 
+- Cetak struk
+- Riwayat transaksi
+
+### 4. Katalog Produk
+- Daftar sepeda dengan spesifikasi
+- Filter berdasarkan tipe, harga, dan merek
+- Update stok otomatis
+
+---
+
+## 🚀 Fitur yang Akan Datang
+
+- [ ] Integrasi database (MySQL/PostgreSQL)
+- [ ] Sistem manajemen pengguna dengan multi-level akses
+- [ ] Halaman Buat Akun
+- [ ] Halaman Dashboard
+- [ ] Halaman Katalog Produk
+
+---

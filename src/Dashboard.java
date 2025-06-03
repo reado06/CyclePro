@@ -12,7 +12,7 @@ public class Dashboard extends JFrame {
         setLocationRelativeTo(null);
         setLayout(new BorderLayout(10, 10));
 
-        // * Panel Atas (Profil)
+        // Panel Atas (Profil)
         JPanel topPanel = new JPanel(new FlowLayout(FlowLayout.RIGHT));
         String username = (Main.currentUser != null) ? Main.currentUser.getUsername() : "Guest";
         JLabel profileLabel = new JLabel("Profil: " + username + " ");
@@ -26,16 +26,17 @@ public class Dashboard extends JFrame {
 
         String[] bikeTypes = {"Sepeda BMX", "Sepeda Gunung", "Sepeda Lipat"};
         String[] categoriesDB = {"BMX", "Gunung", "Lipat"};
+        // Pastikan path ini benar relatif terhadap classpath (misalnya, folder src)
         String[] imagePaths = {
-            "img\\imgDashboard\\sepedaBMX.png",
-            "img\\imgDashboard\\sepedaGunung.png",
-            "img\\imgDashboard\\sepedaLIPAT.png"
+            "img/imgDashboard/sepedaBMX.png",
+            "img/imgDashboard/sepedaGunung.png",
+            "img/imgDashboard/sepedaLIPAT.png"
         };
 
         for (int i = 0; i < bikeTypes.length; i++) {
             final String categoryName = bikeTypes[i];
             final String categoryDBName = categoriesDB[i];
-            final String imagePath = imagePaths[i]; // Untuk Path Gambar yang sesuai
+            final String imagePath = imagePaths[i];
 
             JPanel categoryItemPanel = new JPanel(new FlowLayout(FlowLayout.LEFT, 20, 10));
             categoryItemPanel.setBorder(BorderFactory.createEtchedBorder());
@@ -43,14 +44,18 @@ public class Dashboard extends JFrame {
 
             JLabel imageLabel = new JLabel();
             try {
-                java.net.URL imgUrl = getClass().getResource(imagePath.replace("\\", "/"));
+                // getClass().getResource() lebih baik dengan forward slashes
+                java.net.URL imgUrl = getClass().getResource(imagePath);
                 if (imgUrl != null) {
                     ImageIcon bikeIcon = new ImageIcon(imgUrl);
                     Image image = bikeIcon.getImage().getScaledInstance(100, 100, Image.SCALE_SMOOTH);
                     imageLabel.setIcon(new ImageIcon(image));
+                } else {
+                    imageLabel.setText("Gambar tidak ditemukan: " + imagePath);
+                    System.err.println("Resource not found: " + imagePath);
                 }
             } catch (Exception e) {
-                imageLabel.setText("Gagal Muat"); // Jika gambar gagal dimuat
+                imageLabel.setText("Gagal Muat Gambar"); // Jika gambar gagal dimuat
                 imageLabel.setOpaque(true);
                 imageLabel.setBackground(Color.LIGHT_GRAY);
                 imageLabel.setHorizontalAlignment(SwingConstants.CENTER);

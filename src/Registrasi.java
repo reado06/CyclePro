@@ -10,43 +10,74 @@ public class Registrasi extends JFrame {
 
     public Registrasi() {
         setTitle("Buat Akun - CyclePro");
-        setSize(450, 450);
-        setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE); // Agar tidak menutup seluruh aplikasi
+        setSize(450, 450); 
+        setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
         setLocationRelativeTo(null);
         setLayout(new BorderLayout(10, 10));
 
-        JPanel formPanel = new JPanel(new GridBagLayout());
-        GridBagConstraints gbc = new GridBagConstraints();
-        gbc.insets = new Insets(5,5,5,5);
-        gbc.anchor = GridBagConstraints.WEST;
-        gbc.fill = GridBagConstraints.HORIZONTAL;
+        JPanel formPanel = new JPanel();
+        formPanel.setLayout(null);
+
+        int xMargin = 20;
+        int yPos = 15;
+        int labelWidth = 150;
+        int fieldWidth = 200;
+        int componentHeight = 25;
+        int ySpacing = 8; // Spasi antar komponen
 
         // Username
-        gbc.gridx = 0; gbc.gridy = 0; formPanel.add(new JLabel("Username:"), gbc);
-        gbc.gridx = 1; gbc.gridy = 0; usernameField = new JTextField(20); formPanel.add(usernameField, gbc);
+        JLabel usernameLabel = new JLabel("Username:");
+        usernameLabel.setBounds(xMargin, yPos, labelWidth, componentHeight);
+        formPanel.add(usernameLabel);
+        usernameField = new JTextField(20);
+        usernameField.setBounds(xMargin + labelWidth + 5, yPos, fieldWidth, componentHeight);
+        formPanel.add(usernameField);
+        yPos += componentHeight + ySpacing;
 
         // Password
-        gbc.gridx = 0; gbc.gridy = 1; formPanel.add(new JLabel("Password:"), gbc);
-        gbc.gridx = 1; gbc.gridy = 1; passwordField = new JPasswordField(20); formPanel.add(passwordField, gbc);
+        JLabel passwordLabel = new JLabel("Password:");
+        passwordLabel.setBounds(xMargin, yPos, labelWidth, componentHeight);
+        formPanel.add(passwordLabel);
+        passwordField = new JPasswordField(20);
+        passwordField.setBounds(xMargin + labelWidth + 5, yPos, fieldWidth, componentHeight);
+        formPanel.add(passwordField);
+        yPos += componentHeight + ySpacing;
 
         // Security Question
-        gbc.gridx = 0; gbc.gridy = 2; formPanel.add(new JLabel("Pertanyaan Keamanan:"), gbc);
-        gbc.gridx = 1; gbc.gridy = 2;
+        JLabel securityQuestionLabel = new JLabel("Pertanyaan Keamanan:");
+        securityQuestionLabel.setBounds(xMargin, yPos, labelWidth, componentHeight);
+        formPanel.add(securityQuestionLabel);
         String[] questions = {"Siapa nama hewan peliharaan pertama Anda?", "Apa nama SD Anda?", "Di kota mana orang tua Anda bertemu?"};
         securityQuestionComboBox = new JComboBox<>(questions);
-        formPanel.add(securityQuestionComboBox, gbc);
+        securityQuestionComboBox.setBounds(xMargin + labelWidth + 5, yPos, fieldWidth, componentHeight);
+        formPanel.add(securityQuestionComboBox);
+        yPos += componentHeight + ySpacing;
 
         // Security Answer
-        gbc.gridx = 0; gbc.gridy = 3; formPanel.add(new JLabel("Jawaban Keamanan:"), gbc);
-        gbc.gridx = 1; gbc.gridy = 3; securityAnswerField = new JTextField(20); formPanel.add(securityAnswerField, gbc);
+        JLabel securityAnswerLabel = new JLabel("Jawaban Keamanan:");
+        securityAnswerLabel.setBounds(xMargin, yPos, labelWidth, componentHeight);
+        formPanel.add(securityAnswerLabel);
+        securityAnswerField = new JTextField(20);
+        securityAnswerField.setBounds(xMargin + labelWidth + 5, yPos, fieldWidth, componentHeight);
+        formPanel.add(securityAnswerField);
+        yPos += componentHeight + ySpacing;
 
         // Address
-        gbc.gridx = 0; gbc.gridy = 4; formPanel.add(new JLabel("Alamat:"), gbc);
-        gbc.gridx = 1; gbc.gridy = 4; addressField = new JTextField(20); formPanel.add(addressField, gbc);
+        JLabel addressLabel = new JLabel("Alamat:");
+        addressLabel.setBounds(xMargin, yPos, labelWidth, componentHeight);
+        formPanel.add(addressLabel);
+        addressField = new JTextField(20);
+        addressField.setBounds(xMargin + labelWidth + 5, yPos, fieldWidth, componentHeight);
+        formPanel.add(addressField);
+        yPos += componentHeight + ySpacing;
 
         // Phone Number
-        gbc.gridx = 0; gbc.gridy = 5; formPanel.add(new JLabel("Nomor Telepon:"), gbc);
-        gbc.gridx = 1; gbc.gridy = 5; phoneField = new JTextField(20); formPanel.add(phoneField, gbc);
+        JLabel phoneLabel = new JLabel("Nomor Telepon:");
+        phoneLabel.setBounds(xMargin, yPos, labelWidth, componentHeight);
+        formPanel.add(phoneLabel);
+        phoneField = new JTextField(20);
+        phoneField.setBounds(xMargin + labelWidth + 5, yPos, fieldWidth, componentHeight);
+        formPanel.add(phoneField);
 
         add(formPanel, BorderLayout.CENTER);
 

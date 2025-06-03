@@ -9,10 +9,10 @@ public class HalamanLogin extends JFrame {
 
     public HalamanLogin() {
         setTitle("Login - CyclePro");
-        setSize(400, 300);
+        setSize(400, 300); // Mungkin perlu disesuaikan setelah perubahan layout
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setLocationRelativeTo(null);
-        setLayout(new BorderLayout(10, 10)); // Padding antar komponen
+        setLayout(new BorderLayout(10, 10));
 
         // Panel judul
         JPanel titlePanel = new JPanel();
@@ -22,22 +22,27 @@ public class HalamanLogin extends JFrame {
         add(titlePanel, BorderLayout.NORTH);
 
         // Panel input
-        JPanel inputPanel = new JPanel(new GridBagLayout());
-        GridBagConstraints gbc = new GridBagConstraints();
-        gbc.insets = new Insets(5, 5, 5, 5); // Padding antar sel
-        gbc.fill = GridBagConstraints.HORIZONTAL;
+        JPanel inputPanel = new JPanel();
+        inputPanel.setLayout(null); // Menggunakan null layout
+        // Estimasi ukuran panel yang dibutuhkan
+        inputPanel.setPreferredSize(new Dimension(350, 100));
 
-        gbc.gridx = 0; gbc.gridy = 0;
-        inputPanel.add(new JLabel("Username:"), gbc);
-        gbc.gridx = 1; gbc.gridy = 0;
+
+        JLabel usernameLabel = new JLabel("Username:");
+        usernameLabel.setBounds(20, 20, 80, 25); // x, y, width, height
+        inputPanel.add(usernameLabel);
+
         usernameField = new JTextField(20);
-        inputPanel.add(usernameField, gbc);
+        usernameField.setBounds(110, 20, 220, 25);
+        inputPanel.add(usernameField);
 
-        gbc.gridx = 0; gbc.gridy = 1;
-        inputPanel.add(new JLabel("Password:"), gbc);
-        gbc.gridx = 1; gbc.gridy = 1;
+        JLabel passwordLabel = new JLabel("Password:");
+        passwordLabel.setBounds(20, 55, 80, 25);
+        inputPanel.add(passwordLabel);
+
         passwordField = new JPasswordField(20);
-        inputPanel.add(passwordField, gbc);
+        passwordField.setBounds(110, 55, 220, 25);
+        inputPanel.add(passwordField);
 
         add(inputPanel, BorderLayout.CENTER);
 

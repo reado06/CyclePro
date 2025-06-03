@@ -5,41 +5,53 @@ import java.awt.event.ActionListener;
 
 public class LupaPassword extends JFrame {
     private JTextField usernameField, securityAnswerField;
-    private JLabel questionLabel; // Untuk menampilkan pertanyaan keamanan
+    private JLabel questionLabel;
+    private JButton fetchQuestionButton;
 
     public LupaPassword() {
         setTitle("Lupa Password - CyclePro");
-        setSize(450, 300);
+        setSize(450, 300); // Ukuran frame mungkin perlu disesuaikan
         setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
         setLocationRelativeTo(null);
         setLayout(new BorderLayout(10,10));
 
-        JPanel panel = new JPanel(new GridBagLayout());
-        GridBagConstraints gbc = new GridBagConstraints();
-        gbc.insets = new Insets(5,5,5,5);
-        gbc.anchor = GridBagConstraints.WEST;
-        gbc.fill = GridBagConstraints.HORIZONTAL;
+        JPanel panel = new JPanel();
+        panel.setLayout(null);
 
-        // Username
-        gbc.gridx = 0; gbc.gridy = 0; panel.add(new JLabel("Username:"), gbc);
-        gbc.gridx = 1; gbc.gridy = 0; usernameField = new JTextField(20); panel.add(usernameField, gbc);
+        int xMargin = 20;
+        int yPos = 20;
+        int labelWidth = 150;
+        int fieldWidth = 200;
+        int componentHeight = 25;
+        int ySpacing = 10;
 
-        // Tombol untuk mengambil pertanyaan keamanan
-        gbc.gridx = 0; gbc.gridy = 1; gbc.gridwidth = 2;
-        JButton fetchQuestionButton = new JButton("Dapatkan Pertanyaan Keamanan");
-        panel.add(fetchQuestionButton, gbc);
-        gbc.gridwidth = 1; // Reset gridwidth
+        JLabel usernameLabel = new JLabel("Username:");
+        usernameLabel.setBounds(xMargin, yPos, labelWidth, componentHeight);
+        panel.add(usernameLabel);
 
-        // Label Pertanyaan Keamanan
-        gbc.gridx = 0; gbc.gridy = 2; gbc.gridwidth = 2;
+        usernameField = new JTextField(20);
+        usernameField.setBounds(xMargin + labelWidth + 5, yPos, fieldWidth, componentHeight);
+        panel.add(usernameField);
+        yPos += componentHeight + ySpacing;
+
+        fetchQuestionButton = new JButton("Dapatkan Pertanyaan Keamanan");
+        fetchQuestionButton.setBounds(xMargin, yPos, labelWidth + 5 + fieldWidth, componentHeight); // Tombol lebar
+        panel.add(fetchQuestionButton);
+        yPos += componentHeight + ySpacing;
+
         questionLabel = new JLabel("Pertanyaan keamanan akan muncul di sini.");
         questionLabel.setFont(new Font("Arial", Font.ITALIC, 12));
-        panel.add(questionLabel, gbc);
-        gbc.gridwidth = 1;
+        questionLabel.setBounds(xMargin, yPos, labelWidth + 5 + fieldWidth, componentHeight);
+        panel.add(questionLabel);
+        yPos += componentHeight + ySpacing;
 
-        // Security Answer
-        gbc.gridx = 0; gbc.gridy = 3; panel.add(new JLabel("Jawaban Keamanan:"), gbc);
-        gbc.gridx = 1; gbc.gridy = 3; securityAnswerField = new JTextField(20); panel.add(securityAnswerField, gbc);
+        JLabel securityAnswerLabel = new JLabel("Jawaban Keamanan:");
+        securityAnswerLabel.setBounds(xMargin, yPos, labelWidth, componentHeight);
+        panel.add(securityAnswerLabel);
+
+        securityAnswerField = new JTextField(20);
+        securityAnswerField.setBounds(xMargin + labelWidth + 5, yPos, fieldWidth, componentHeight);
+        panel.add(securityAnswerField);
 
         add(panel, BorderLayout.CENTER);
 
@@ -78,15 +90,13 @@ public class LupaPassword extends JFrame {
             if (result != null) {
                 String password = result[0];
                 JOptionPane.showMessageDialog(this, "Password Anda adalah: " + password, "Password Ditemukan", JOptionPane.INFORMATION_MESSAGE);
-                dispose(); // Kembali ke login atau tutup saja
+                dispose();
             } else {
                 JOptionPane.showMessageDialog(this, "Username atau jawaban salah.", "Gagal", JOptionPane.ERROR_MESSAGE);
             }
         });
 
         backButton.addActionListener(e -> {
-            // Jika LoginPage masih ada, tidak perlu buat baru. Tapi untuk simpel, kita buat baru.
-            // new LoginPage().setVisible(true);
             dispose();
         });
     }

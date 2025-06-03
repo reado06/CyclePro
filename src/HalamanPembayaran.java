@@ -9,21 +9,17 @@ public class HalamanPembayaran extends JFrame {
     private JComboBox<String> paymentMethodComboBox;
     private JComboBox<String> courierComboBox;
     private JLabel vaInfoLabel; // Untuk menampilkan info VA
+    private JTextArea addressArea;
 
     public HalamanPembayaran(Produk product) {
         this.selectedProduct = product;
         setTitle("Pembayaran - CyclePro");
-        setSize(800, 550);
+        setSize(500, 450); // Disesuaikan untuk setBounds
         setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
         setLocationRelativeTo(null);
         setLayout(new BorderLayout(10, 10));
 
-        // Panel Kiri untuk Gambar Produk
-        JPanel imagePanel = new JPanel(new BorderLayout());
-        imagePanel.setPreferredSize(new Dimension(260, 0));
-        imagePanel.setBorder(BorderFactory.createTitledBorder("Gambar Produk"));
-
-        // Panel Info Produk
+        // Panel Info Produk (Bagian Atas)
         JPanel productInfoPanel = new JPanel();
         productInfoPanel.setLayout(new BoxLayout(productInfoPanel, BoxLayout.Y_AXIS));
         productInfoPanel.setBorder(BorderFactory.createTitledBorder("Detail Produk"));
@@ -32,48 +28,57 @@ public class HalamanPembayaran extends JFrame {
         productInfoPanel.add(new JLabel("Harga: Rp " + String.format("%,.0f", selectedProduct.getPrice())));
         add(productInfoPanel, BorderLayout.NORTH);
 
-        // Panel Opsi Pembayaran
-        JPanel optionsPanel = new JPanel(new GridBagLayout());
-        optionsPanel.setBorder(BorderFactory.createEmptyBorder(10,10,10,10));
-        GridBagConstraints gbc = new GridBagConstraints();
-        gbc.insets = new Insets(5,5,5,5);
-        gbc.anchor = GridBagConstraints.WEST;
-        gbc.fill = GridBagConstraints.HORIZONTAL;
+        // Panel Opsi Pembayaran (Tengah)
+        JPanel optionsPanel = new JPanel();
+        optionsPanel.setLayout(null); // Menggunakan null layout
+        optionsPanel.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
 
-        // Metode Pembayaran
-        gbc.gridx = 0; gbc.gridy = 0; optionsPanel.add(new JLabel("Metode Pembayaran:"), gbc);
-        gbc.gridx = 1; gbc.gridy = 0;
+        int yPos = 10;
+        int labelWidth = 150;
+        int fieldWidth = 250;
+        int componentHeight = 25;
+        int padding = 5;
+
+        JLabel paymentMethodLabel = new JLabel("Metode Pembayaran:");
+        paymentMethodLabel.setBounds(10, yPos, labelWidth, componentHeight);
+        optionsPanel.add(paymentMethodLabel);
+
         String[] paymentMethods = {"Virtual Account", "COD (Bayar di Tempat)"};
         paymentMethodComboBox = new JComboBox<>(paymentMethods);
-        optionsPanel.add(paymentMethodComboBox, gbc);
+        paymentMethodComboBox.setBounds(10 + labelWidth + padding, yPos, fieldWidth, componentHeight);
+        optionsPanel.add(paymentMethodComboBox);
+        yPos += componentHeight + padding;
 
-        // Info VA (awalnya disembunyikan atau kosong)
-        gbc.gridx = 0; gbc.gridy = 1; gbc.gridwidth = 2;
-        vaInfoLabel = new JLabel(" "); // Kosongkan dulu, atau beri placeholder
+        vaInfoLabel = new JLabel(" ");
         vaInfoLabel.setForeground(Color.BLUE);
-        optionsPanel.add(vaInfoLabel, gbc);
-        gbc.gridwidth = 1; // reset
+        vaInfoLabel.setBounds(10 + labelWidth + padding, yPos, fieldWidth + 50, componentHeight); // Lebarkan untuk teks VA
+        optionsPanel.add(vaInfoLabel);
+        yPos += componentHeight + padding;
 
-        // Kurir Ekspedisi
-        gbc.gridx = 0; gbc.gridy = 2; optionsPanel.add(new JLabel("Kurir Ekspedisi:"), gbc);
-        gbc.gridx = 1; gbc.gridy = 2;
+        JLabel courierLabel = new JLabel("Kurir Ekspedisi:");
+        courierLabel.setBounds(10, yPos, labelWidth, componentHeight);
+        optionsPanel.add(courierLabel);
+
         String[] couriers = {"SiCepat", "JNE", "J&T Express"};
         courierComboBox = new JComboBox<>(couriers);
-        optionsPanel.add(courierComboBox, gbc);
+        courierComboBox.setBounds(10 + labelWidth + padding, yPos, fieldWidth, componentHeight);
+        optionsPanel.add(courierComboBox);
+        yPos += componentHeight + padding;
 
-        // Alamat Pengiriman (ambil dari user yang login)
-        gbc.gridx = 0; gbc.gridy = 3; optionsPanel.add(new JLabel("Alamat Pengiriman:"), gbc);
-        gbc.gridx = 1; gbc.gridy = 3;
-        JTextArea addressArea = new JTextArea(Main.currentUser != null ? Main.currentUser.getAddress() : "Alamat tidak tersedia");
+        JLabel addressLabel = new JLabel("Alamat Pengiriman:");
+        addressLabel.setBounds(10, yPos, labelWidth, componentHeight);
+        optionsPanel.add(addressLabel);
+
+        addressArea = new JTextArea(Main.currentUser != null ? Main.currentUser.getAddress() : "Alamat tidak tersedia");
         addressArea.setRows(3);
-        addressArea.setEditable(false); // Bisa dibuat editable jika diperlukan
+        addressArea.setEditable(false);
         JScrollPane addressScrollPane = new JScrollPane(addressArea);
-        optionsPanel.add(addressScrollPane, gbc);
-
+        addressScrollPane.setBounds(10 + labelWidth + padding, yPos, fieldWidth, 60); // Tinggi disesuaikan untuk TextArea
+        optionsPanel.add(addressScrollPane);
 
         add(optionsPanel, BorderLayout.CENTER);
 
-        // Panel Tombol
+        // Panel Tombol (Bawah)
         JPanel buttonPanel = new JPanel(new FlowLayout(FlowLayout.CENTER));
         JButton confirmPaymentButton = new JButton("Konfirmasi Pembayaran");
         JButton cancelButton = new JButton("Batal");
@@ -81,17 +86,18 @@ public class HalamanPembayaran extends JFrame {
         buttonPanel.add(cancelButton);
         add(buttonPanel, BorderLayout.SOUTH);
 
-        // Event Listener untuk ComboBox Metode Pembayaran
         paymentMethodComboBox.addActionListener(e -> {
             String selectedMethod = (String) paymentMethodComboBox.getSelectedItem();
             if ("Virtual Account".equals(selectedMethod) && Main.currentUser != null) {
                 vaInfoLabel.setText("Kode VA: 727" + Main.currentUser.getPhoneNumber());
             } else {
-                vaInfoLabel.setText(" "); // Kosongkan jika bukan VA
+                vaInfoLabel.setText(" ");
             }
         });
-        // Panggil sekali untuk inisialisasi
-        paymentMethodComboBox.getActionListeners()[0].actionPerformed(null);
+        
+        if (paymentMethodComboBox.getActionListeners().length > 0) {
+            paymentMethodComboBox.getActionListeners()[0].actionPerformed(null);
+        }
 
 
         confirmPaymentButton.addActionListener(e -> {
@@ -123,7 +129,6 @@ public class HalamanPembayaran extends JFrame {
         });
 
         cancelButton.addActionListener(e -> {
-            // Kembali ke halaman kategori sepeda sebelumnya
             new KategoriSepeda(selectedProduct.getCategory()).setVisible(true);
             dispose();
         });

@@ -4,6 +4,8 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.util.ArrayList;
+import java.util.List;
 
 public class DatabaseHelper {
     private static final String URL = "jdbc:sqlite:cyclepro.db";
@@ -33,8 +35,6 @@ public class DatabaseHelper {
                 + " user_id INTEGER PRIMARY KEY AUTOINCREMENT,"
                 + " username TEXT UNIQUE NOT NULL,"
                 + " password TEXT NOT NULL,"
-                + " security_question TEXT,"
-                + " security_answer TEXT NOT NULL,"
                 + " address TEXT,"
                 + " phone_number TEXT NOT NULL"
                 + ");";
@@ -65,12 +65,11 @@ public class DatabaseHelper {
                 + ");";
 
         try (Connection conn = connect();
-            Statement stmt = conn.createStatement()) {
+             Statement stmt = conn.createStatement()) {
             stmt.execute(usersTable);
             stmt.execute(productsTable);
             stmt.execute(ordersTable);
-            System.out.println("Tables created successfully.");
-            // Tambahkan beberapa data produk contoh jika tabel baru dibuat
+            System.out.println("Tables created successfully (users table updated).");
             addSampleProducts();
         } catch (SQLException e) {
             System.out.println("Error creating tables: " + e.getMessage());
@@ -82,35 +81,155 @@ public class DatabaseHelper {
         String insertProductSQL = "INSERT INTO products(name, category, price, description, image_path, stock) VALUES(?,?,?,?,?,?)";
 
         try (Connection conn = connect();
-            Statement stmt = conn.createStatement();
-            ResultSet rs = stmt.executeQuery(checkProducts)) {
+             Statement stmt = conn.createStatement();
+             ResultSet rs = stmt.executeQuery(checkProducts)) {
 
-            if (rs.next() && rs.getInt("count") == 0) { // Hanya tambahkan jika tabel produk kosong
+            if (rs.next() && rs.getInt("count") == 0) {
                 System.out.println("Adding sample products...");
                 try (PreparedStatement pstmt = conn.prepareStatement(insertProductSQL)) {
-                    // BMX
-                    pstmt.setString(1, "BMX Pro X1"); pstmt.setString(2, "BMX"); pstmt.setDouble(3, 1500000); pstmt.setString(4, "Sepeda BMX untuk freestyle"); pstmt.setString(5, "bmx1.png"); pstmt.setInt(6, 10); pstmt.executeUpdate();
-                    pstmt.setString(1, "BMX Street Master"); pstmt.setString(2, "BMX"); pstmt.setDouble(3, 1200000); pstmt.setString(4, "Sepeda BMX lincah di jalanan"); pstmt.setString(5, "bmx2.png"); pstmt.setInt(6, 15); pstmt.executeUpdate();
-                    pstmt.setString(1, "BMX Lite Fun"); pstmt.setString(2, "BMX"); pstmt.setDouble(3, 900000); pstmt.setString(4, "Sepeda BMX ringan untuk pemula"); pstmt.setString(5, "bmx3.png"); pstmt.setInt(6, 20); pstmt.executeUpdate();
-                    pstmt.setString(1, "BMX Racer Z"); pstmt.setString(2, "BMX"); pstmt.setDouble(3, 1800000); pstmt.setString(4, "Sepeda BMX untuk kecepatan"); pstmt.setString(5, "bmx4.png"); pstmt.setInt(6, 8); pstmt.executeUpdate();
-                    pstmt.setString(1, "BMX Park King"); pstmt.setString(2, "BMX"); pstmt.setDouble(3, 1600000); pstmt.setString(4, "Sepeda BMX untuk atraksi di taman"); pstmt.setString(5, "bmx5.png"); pstmt.setInt(6, 12); pstmt.executeUpdate();
-                    pstmt.setString(1, "BMX Dirt Jumper"); pstmt.setString(2, "BMX"); pstmt.setDouble(3, 1700000); pstmt.setString(4, "Sepeda BMX untuk trek tanah"); pstmt.setString(5, "bmx6.png"); pstmt.setInt(6, 7); pstmt.executeUpdate();
+                    pstmt.setString(1, "BMX Pro X1"); 
+                    pstmt.setString(2, "BMX"); 
+                    pstmt.setDouble(3, 1500000); 
+                    pstmt.setString(4, "Sepeda BMX untuk freestyle"); 
+                    pstmt.setString(5, "bmx1.png"); 
+                    pstmt.setInt(6, 10); 
+                    pstmt.executeUpdate();
+                    
+                    pstmt.setString(1, "BMX Street Master"); 
+                    pstmt.setString(2, "BMX"); 
+                    pstmt.setDouble(3, 1200000); 
+                    pstmt.setString(4, "Sepeda BMX lincah di jalanan"); 
+                    pstmt.setString(5, "bmx2.png"); 
+                    pstmt.setInt(6, 15); 
+                    pstmt.executeUpdate();
 
-                    // Gunung
-                    pstmt.setString(1, "Gunung Everest Peak"); pstmt.setString(2, "Gunung"); pstmt.setDouble(3, 3500000); pstmt.setString(4, "Sepeda gunung tangguh semua medan"); pstmt.setString(5, "gunung1.png"); pstmt.setInt(6, 5); pstmt.executeUpdate();
-                    pstmt.setString(1, "Gunung TrailBlazer X"); pstmt.setString(2, "Gunung"); pstmt.setDouble(3, 2800000); pstmt.setString(4, "Sepeda gunung untuk petualangan trail"); pstmt.setString(5, "gunung2.png"); pstmt.setInt(6, 8); pstmt.executeUpdate();
-                    pstmt.setString(1, "Gunung RockHopper"); pstmt.setString(2, "Gunung"); pstmt.setDouble(3, 2200000); pstmt.setString(4, "Sepeda gunung handal dan nyaman"); pstmt.setString(5, "gunung3.png"); pstmt.setInt(6, 12); pstmt.executeUpdate();
-                    pstmt.setString(1, "Gunung Summit Seeker"); pstmt.setString(2, "Gunung"); pstmt.setDouble(3, 4000000); pstmt.setString(4, "Sepeda gunung performa tinggi"); pstmt.setString(5, "gunung4.png"); pstmt.setInt(6, 4); pstmt.executeUpdate();
-                    pstmt.setString(1, "Gunung Forest Rider"); pstmt.setString(2, "Gunung"); pstmt.setDouble(3, 2500000); pstmt.setString(4, "Sepeda gunung untuk menjelajah hutan"); pstmt.setString(5, "gunung5.png"); pstmt.setInt(6, 10); pstmt.executeUpdate();
-                    pstmt.setString(1, "Gunung Canyon Carver"); pstmt.setString(2, "Gunung"); pstmt.setDouble(3, 3200000); pstmt.setString(4, "Sepeda gunung untuk medan curam"); pstmt.setString(5, "gunung6.png"); pstmt.setInt(6, 6); pstmt.executeUpdate();
+                    pstmt.setString(1, "BMX Lite Fun"); 
+                    pstmt.setString(2, "BMX"); 
+                    pstmt.setDouble(3, 900000); 
+                    pstmt.setString(4, "Sepeda BMX ringan untuk pemula"); 
+                    pstmt.setString(5, "bmx3.png"); 
+                    pstmt.setInt(6, 20); 
+                    pstmt.executeUpdate();
 
-                    // Lipat
-                    pstmt.setString(1, "Lipat CityCommute"); pstmt.setString(2, "Lipat"); pstmt.setDouble(3, 1800000); pstmt.setString(4, "Sepeda lipat praktis untuk perkotaan"); pstmt.setString(5, "lipat1.png"); pstmt.setInt(6, 15); pstmt.executeUpdate();
-                    pstmt.setString(1, "Lipat UrbanFold"); pstmt.setString(2, "Lipat"); pstmt.setDouble(3, 1500000); pstmt.setString(4, "Sepeda lipat ringkas dan stylish"); pstmt.setString(5, "lipat2.png"); pstmt.setInt(6, 18); pstmt.executeUpdate();
-                    pstmt.setString(1, "Lipat QuickFold"); pstmt.setString(2, "Lipat"); pstmt.setDouble(3, 2000000); pstmt.setString(4, "Sepeda lipat mudah dibawa"); pstmt.setString(5, "lipat3.png"); pstmt.setInt(6, 10); pstmt.executeUpdate();
-                    pstmt.setString(1, "Lipat Metro Lite"); pstmt.setString(2, "Lipat"); pstmt.setDouble(3, 1600000); pstmt.setString(4, "Sepeda lipat ringan dan efisien"); pstmt.setString(5, "lipat4.png"); pstmt.setInt(6, 20); pstmt.executeUpdate();
-                    pstmt.setString(1, "Lipat TravelMate"); pstmt.setString(2, "Lipat"); pstmt.setDouble(3, 2200000); pstmt.setString(4, "Sepeda lipat ideal untuk bepergian"); pstmt.setString(5, "lipat5.png"); pstmt.setInt(6, 9); pstmt.executeUpdate();
-                    pstmt.setString(1, "Lipat SwiftFold"); pstmt.setString(2, "Lipat"); pstmt.setDouble(3, 1900000); pstmt.setString(4, "Sepeda lipat cepat dan nyaman"); pstmt.setString(5, "lipat6.png"); pstmt.setInt(6, 11); pstmt.executeUpdate();
+                    pstmt.setString(1, "BMX Racer Z"); 
+                    pstmt.setString(2, "BMX"); 
+                    pstmt.setDouble(3, 1800000); 
+                    pstmt.setString(4, "Sepeda BMX untuk kecepatan"); 
+                    pstmt.setString(5, "bmx4.png"); 
+                    pstmt.setInt(6, 8); 
+                    pstmt.executeUpdate();
+
+                    pstmt.setString(1, "BMX Park King"); 
+                    pstmt.setString(2, "BMX"); 
+                    pstmt.setDouble(3, 1600000); 
+                    pstmt.setString(4, "Sepeda BMX untuk atraksi di taman"); 
+                    pstmt.setString(5, "bmx5.png"); 
+                    pstmt.setInt(6, 12); 
+                    pstmt.executeUpdate();
+
+                    pstmt.setString(1, "BMX Dirt Jumper"); 
+                    pstmt.setString(2, "BMX"); 
+                    pstmt.setDouble(3, 1700000); 
+                    pstmt.setString(4, "Sepeda BMX untuk trek tanah"); 
+                    pstmt.setString(5, "bmx6.png"); 
+                    pstmt.setInt(6, 7); 
+                    pstmt.executeUpdate();
+
+                    pstmt.setString(1, "Gunung Everest Peak"); 
+                    pstmt.setString(2, "Gunung"); 
+                    pstmt.setDouble(3, 3500000); 
+                    pstmt.setString(4, "Sepeda gunung tangguh semua medan"); 
+                    pstmt.setString(5, "gunung1.png"); 
+                    pstmt.setInt(6, 5); 
+                    pstmt.executeUpdate();
+
+                    pstmt.setString(1, "Gunung TrailBlazer X"); 
+                    pstmt.setString(2, "Gunung"); 
+                    pstmt.setDouble(3, 2800000); 
+                    pstmt.setString(4, "Sepeda gunung untuk petualangan trail"); 
+                    pstmt.setString(5, "gunung2.png"); 
+                    pstmt.setInt(6, 8); 
+                    pstmt.executeUpdate();
+
+                    pstmt.setString(1, "Gunung RockHopper"); 
+                    pstmt.setString(2, "Gunung"); 
+                    pstmt.setDouble(3, 2200000); 
+                    pstmt.setString(4, "Sepeda gunung handal dan nyaman"); 
+                    pstmt.setString(5, "gunung3.png"); 
+                    pstmt.setInt(6, 12); 
+                    pstmt.executeUpdate();
+
+                    pstmt.setString(1, "Gunung Summit Seeker"); 
+                    pstmt.setString(2, "Gunung"); 
+                    pstmt.setDouble(3, 4000000); 
+                    pstmt.setString(4, "Sepeda gunung performa tinggi"); 
+                    pstmt.setString(5, "gunung4.png"); 
+                    pstmt.setInt(6, 4); 
+                    pstmt.executeUpdate();
+
+                    pstmt.setString(1, "Gunung Forest Rider"); 
+                    pstmt.setString(2, "Gunung"); 
+                    pstmt.setDouble(3, 2500000); 
+                    pstmt.setString(4, "Sepeda gunung untuk menjelajah hutan"); 
+                    pstmt.setString(5, "gunung5.png"); 
+                    pstmt.setInt(6, 10); 
+                    pstmt.executeUpdate();
+
+                    pstmt.setString(1, "Gunung Canyon Carver"); 
+                    pstmt.setString(2, "Gunung"); 
+                    pstmt.setDouble(3, 3200000); 
+                    pstmt.setString(4, "Sepeda gunung untuk medan curam"); 
+                    pstmt.setString(5, "gunung6.png"); 
+                    pstmt.setInt(6, 6); 
+                    pstmt.executeUpdate();
+
+                    pstmt.setString(1, "Lipat CityCommute"); 
+                    pstmt.setString(2, "Lipat"); 
+                    pstmt.setDouble(3, 1800000); 
+                    pstmt.setString(4, "Sepeda lipat praktis untuk perkotaan"); 
+                    pstmt.setString(5, "lipat1.png"); 
+                    pstmt.setInt(6, 15); 
+                    pstmt.executeUpdate();
+
+                    pstmt.setString(1, "Lipat UrbanFold"); 
+                    pstmt.setString(2, "Lipat"); 
+                    pstmt.setDouble(3, 1500000); 
+                    pstmt.setString(4, "Sepeda lipat ringkas dan stylish"); 
+                    pstmt.setString(5, "lipat2.png"); 
+                    pstmt.setInt(6, 18); 
+                    pstmt.executeUpdate();
+
+                    pstmt.setString(1, "Lipat QuickFold"); 
+                    pstmt.setString(2, "Lipat"); 
+                    pstmt.setDouble(3, 2000000); 
+                    pstmt.setString(4, "Sepeda lipat mudah dibawa"); 
+                    pstmt.setString(5, "lipat3.png"); 
+                    pstmt.setInt(6, 10); 
+                    pstmt.executeUpdate();
+
+                    pstmt.setString(1, "Lipat Metro Lite"); 
+                    pstmt.setString(2, "Lipat"); 
+                    pstmt.setDouble(3, 1600000); 
+                    pstmt.setString(4, "Sepeda lipat ringan dan efisien"); 
+                    pstmt.setString(5, "lipat4.png"); 
+                    pstmt.setInt(6, 20); 
+                    pstmt.executeUpdate();
+
+                    pstmt.setString(1, "Lipat TravelMate"); 
+                    pstmt.setString(2, "Lipat"); 
+                    pstmt.setDouble(3, 2200000); 
+                    pstmt.setString(4, "Sepeda lipat ideal untuk bepergian"); 
+                    pstmt.setString(5, "lipat5.png"); 
+                    pstmt.setInt(6, 9); 
+                    pstmt.executeUpdate();
+
+                    pstmt.setString(1, "Lipat SwiftFold"); 
+                    pstmt.setString(2, "Lipat"); 
+                    pstmt.setDouble(3, 1900000); 
+                    pstmt.setString(4, "Sepeda lipat cepat dan nyaman"); 
+                    pstmt.setString(5, "lipat6.png"); 
+                    pstmt.setInt(6, 11); 
+                    pstmt.executeUpdate();
                     System.out.println("Sample products added.");
                 }
             }
@@ -123,12 +242,12 @@ public class DatabaseHelper {
     public static User authenticateUser(String username, String password) {
         String sql = "SELECT user_id, username, address, phone_number FROM users WHERE username = ? AND password = ?";
         try (Connection conn = connect();
-            PreparedStatement pstmt = conn.prepareStatement(sql)) {
+             PreparedStatement pstmt = conn.prepareStatement(sql)) {
             pstmt.setString(1, username);
             pstmt.setString(2, password);
             ResultSet rs = pstmt.executeQuery();
             if (rs.next()) {
-                return new User(rs.getInt("user_id"), rs.getString("username"), "", "", rs.getString("address"), rs.getString("phone_number"));
+                return new User(rs.getInt("user_id"), rs.getString("username"), "", rs.getString("address"), rs.getString("phone_number"));
             }
         } catch (SQLException e) {
             System.out.println("Authentication error: " + e.getMessage());
@@ -136,16 +255,14 @@ public class DatabaseHelper {
         return null;
     }
 
-    public static boolean registerUser(String username, String password, String securityQuestion, String securityAnswer, String address, String phoneNumber) {
-        String sql = "INSERT INTO users(username, password, security_question, security_answer, address, phone_number) VALUES(?,?,?,?,?,?)";
+    public static boolean registerUser(String username, String password, String address, String phoneNumber) {
+        String sql = "INSERT INTO users(username, password, address, phone_number) VALUES(?,?,?,?)";
         try (Connection conn = connect();
-            PreparedStatement pstmt = conn.prepareStatement(sql)) {
+             PreparedStatement pstmt = conn.prepareStatement(sql)) {
             pstmt.setString(1, username);
             pstmt.setString(2, password);
-            pstmt.setString(3, securityQuestion);
-            pstmt.setString(4, securityAnswer);
-            pstmt.setString(5, address);
-            pstmt.setString(6, phoneNumber);
+            pstmt.setString(3, address);
+            pstmt.setString(4, phoneNumber);
             pstmt.executeUpdate();
             return true;
         } catch (SQLException e) {
@@ -154,43 +271,11 @@ public class DatabaseHelper {
         }
     }
 
-    public static String[] recoverPassword(String username, String securityAnswer) {
-        String sql = "SELECT password, security_question FROM users WHERE username = ? AND security_answer = ?";
-        try (Connection conn = connect();
-            PreparedStatement pstmt = conn.prepareStatement(sql)) {
-            pstmt.setString(1, username);
-            pstmt.setString(2, securityAnswer);
-            ResultSet rs = pstmt.executeQuery();
-            if (rs.next()) {
-                return new String[]{rs.getString("password"), rs.getString("security_question")};
-            }
-        } catch (SQLException e) {
-            System.out.println("Password recovery error: " + e.getMessage());
-        }
-        return null;
-    }
-
-    public static String getSecurityQuestion(String username) {
-        String sql = "SELECT security_question FROM users WHERE username = ?";
-        try (Connection conn = connect();
-            PreparedStatement pstmt = conn.prepareStatement(sql)) {
-            pstmt.setString(1, username);
-            ResultSet rs = pstmt.executeQuery();
-            if (rs.next()) {
-                return rs.getString("security_question");
-            }
-        } catch (SQLException e) {
-            System.out.println("Error fetching security question: " + e.getMessage());
-        }
-        return null;
-    }
-
-
-    public static java.util.List<Produk> getProductsByCategory(String category) {
-        java.util.List<Produk> products = new java.util.ArrayList<>();
+    public static List<Produk> getProductsByCategory(String category) {
+        List<Produk> products = new ArrayList<>();
         String sql = "SELECT product_id, name, category, price, description, image_path, stock FROM products WHERE category = ?";
         try (Connection conn = connect();
-            PreparedStatement pstmt = conn.prepareStatement(sql)) {
+             PreparedStatement pstmt = conn.prepareStatement(sql)) {
             pstmt.setString(1, category);
             ResultSet rs = pstmt.executeQuery();
             while (rs.next()) {
@@ -225,7 +310,7 @@ public class DatabaseHelper {
             } else {
                 pstmt.setNull(7, java.sql.Types.VARCHAR);
             }
-            pstmt.setString(8, "Diproses"); // atau 'Pending' lalu update
+            pstmt.setString(8, "Diproses");
             pstmt.executeUpdate();
             return true;
         } catch (SQLException e) {

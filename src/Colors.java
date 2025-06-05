@@ -43,7 +43,7 @@ public class Colors {
     // Warna untuk Border atau Garis Pemisah
     public static final Color BORDER_COLOR = new Color(0xBDC3C7); // Silver
 
-    public static final Color TEXT_LINK = null;
+    public static final Color TEXT_LINK = new Color(0x3498DB); // Peter River Blue
 
     // Contoh penggunaan:
     // myFrame.getContentPane().setBackground(Colors.BACKGROUND_PRIMARY);

@@ -59,19 +59,12 @@ public class HalamanLogin extends JFrame {
         loginButton.setForeground(Colors.BUTTON_PRIMARY_TEXT);
         loginButton.setFont(new Font("Arial", Font.BOLD, 12));
 
-        JButton forgotPasswordButton = new JButton("Lupa Password");
-        forgotPasswordButton.setBackground(Colors.BUTTON_SECONDARY_BACKGROUND);
-        forgotPasswordButton.setForeground(Colors.BUTTON_SECONDARY_TEXT);
-        forgotPasswordButton.setFont(new Font("Arial", Font.PLAIN, 12));
-
-
         JButton registerButton = new JButton("Buat Akun");
         registerButton.setBackground(Colors.BUTTON_SUCCESS_BACKGROUND);
         registerButton.setForeground(Colors.BUTTON_SUCCESS_TEXT);
         registerButton.setFont(new Font("Arial", Font.PLAIN, 12));
 
         buttonPanel.add(loginButton);
-        buttonPanel.add(forgotPasswordButton);
         buttonPanel.add(registerButton);
         add(buttonPanel, BorderLayout.SOUTH);
 
@@ -93,10 +86,6 @@ public class HalamanLogin extends JFrame {
             } else {
                 JOptionPane.showMessageDialog(this, "Username atau password salah.", "Login Gagal", JOptionPane.ERROR_MESSAGE);
             }
-        });
-
-        forgotPasswordButton.addActionListener(e -> {
-            new LupaPassword().setVisible(true); 
         });
 
         registerButton.addActionListener(e -> {

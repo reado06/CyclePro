@@ -2,13 +2,12 @@ import javax.swing.*;
 import java.awt.*;
 
 public class Registrasi extends JFrame {
-    private JTextField usernameField, securityAnswerField, addressField, phoneField;
+    private JTextField usernameField, addressField, phoneField;
     private JPasswordField passwordField;
-    private JComboBox<String> securityQuestionComboBox;
 
     public Registrasi() {
         setTitle("Buat Akun - CyclePro");
-        setSize(450, 480);
+        setSize(450, 350);
         setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
         setLocationRelativeTo(null);
         setLayout(new BorderLayout(10, 10));
@@ -50,30 +49,6 @@ public class Registrasi extends JFrame {
         passwordField.setBounds(xMargin + labelWidth + 5, yPos, fieldWidth, componentHeight);
         passwordField.setBorder(BorderFactory.createLineBorder(Colors.BORDER_COLOR));
         formPanel.add(passwordField);
-        yPos += componentHeight + ySpacing;
-
-        // Security Question
-        JLabel securityQuestionLabel = new JLabel("Pertanyaan Keamanan:");
-        securityQuestionLabel.setBounds(xMargin, yPos, labelWidth, componentHeight);
-        securityQuestionLabel.setForeground(Colors.TEXT_PRIMARY);
-        formPanel.add(securityQuestionLabel);
-        String[] questions = {"Siapa nama hewan peliharaan pertama Anda?", "Apa nama SD Anda?", "Di kota mana orang tua Anda bertemu?"}; //
-        securityQuestionComboBox = new JComboBox<>(questions);
-        securityQuestionComboBox.setBounds(xMargin + labelWidth + 5, yPos, fieldWidth, componentHeight);
-        securityQuestionComboBox.setBackground(Color.WHITE); 
-        securityQuestionComboBox.setBorder(BorderFactory.createLineBorder(Colors.BORDER_COLOR));
-        formPanel.add(securityQuestionComboBox);
-        yPos += componentHeight + ySpacing;
-
-        // Security Answer
-        JLabel securityAnswerLabel = new JLabel("Jawaban Keamanan:");
-        securityAnswerLabel.setBounds(xMargin, yPos, labelWidth, componentHeight);
-        securityAnswerLabel.setForeground(Colors.TEXT_PRIMARY);
-        formPanel.add(securityAnswerLabel);
-        securityAnswerField = new JTextField(20);
-        securityAnswerField.setBounds(xMargin + labelWidth + 5, yPos, fieldWidth, componentHeight);
-        securityAnswerField.setBorder(BorderFactory.createLineBorder(Colors.BORDER_COLOR));
-        formPanel.add(securityAnswerField);
         yPos += componentHeight + ySpacing;
 
         // Address
@@ -118,17 +93,15 @@ public class Registrasi extends JFrame {
         registerButton.addActionListener(e -> {
             String username = usernameField.getText();
             String password = new String(passwordField.getPassword());
-            String securityQuestion = (String) securityQuestionComboBox.getSelectedItem();
-            String securityAnswer = securityAnswerField.getText();
             String address = addressField.getText();
             String phone = phoneField.getText();
 
-            if (username.isEmpty() || password.isEmpty() || securityAnswer.isEmpty() || address.isEmpty() || phone.isEmpty()) {
+            if (username.isEmpty() || password.isEmpty() || address.isEmpty() || phone.isEmpty()) {
                 JOptionPane.showMessageDialog(this, "Semua field harus diisi!", "Error", JOptionPane.ERROR_MESSAGE);
                 return;
             }
 
-            if (DatabaseHelper.registerUser(username, password, securityQuestion, securityAnswer, address, phone)) { //
+            if (DatabaseHelper.registerUser(username, password, address, phone)) { 
                 JOptionPane.showMessageDialog(this, "Registrasi berhasil! Silakan login.");
                 new HalamanLogin().setVisible(true);
                 dispose();

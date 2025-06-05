@@ -1,8 +1,8 @@
 public class User {
     private int userId;
     private String username;
-    private String password; // Hanya untuk kelengkapan, tidak selalu diisi
-    private String securityQuestion; // Hanya untuk kelengkapan
+    private String password; 
+    private String securityQuestion;
     private String address;
     private String phoneNumber;
 
@@ -18,7 +18,7 @@ public class User {
     // Getters
     public int getUserId() { return userId; }
     public String getUsername() { return username; }
-    public String getPassword() { return password; } // Hati-hati penggunaan
+    public String getPassword() { return password; }
     public String getSecurityQuestion() { return securityQuestion; }
     public String getAddress() { return address; }
     public String getPhoneNumber() { return phoneNumber; }

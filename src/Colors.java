@@ -1,14 +1,7 @@
 import java.awt.Color;
 
-/**
- * Kelas AppColors berfungsi sebagai template terpusat untuk warna-warna 
- * yang digunakan di seluruh aplikasi CyclePro.
- * Ini memudahkan pengelolaan dan perubahan tema warna aplikasi.
- */
 public class Colors {
 
-    // Private constructor untuk mencegah instansiasi kelas ini,
-    // karena kelas ini hanya berisi field statis.
     private Colors() {}
 
     // Warna Latar Belakang Utama Aplikasi
@@ -50,11 +43,13 @@ public class Colors {
     // Warna untuk Border atau Garis Pemisah
     public static final Color BORDER_COLOR = new Color(0xBDC3C7); // Silver
 
+    public static final Color TEXT_LINK = null;
+
     // Contoh penggunaan:
-    // myFrame.getContentPane().setBackground(AppColors.BACKGROUND_PRIMARY);
-    // myPanel.setBackground(AppColors.BACKGROUND_SECONDARY);
-    // myButton.setBackground(AppColors.BUTTON_PRIMARY_BACKGROUND);
-    // myButton.setForeground(AppColors.BUTTON_PRIMARY_TEXT);
-    // titleLabel.setForeground(AppColors.TEXT_PRIMARY);
-    // headerPanel.setBackground(AppColors.NAVBAR_BACKGROUND);
+    // myFrame.getContentPane().setBackground(Colors.BACKGROUND_PRIMARY);
+    // myPanel.setBackground(Colors.BACKGROUND_SECONDARY);
+    // myButton.setBackground(Colors.BUTTON_PRIMARY_BACKGROUND);
+    // myButton.setForeground(Colors.BUTTON_PRIMARY_TEXT);
+    // titleLabel.setForeground(Colors.TEXT_PRIMARY);
+    // headerPanel.setBackground(Colors.NAVBAR_BACKGROUND);
 }

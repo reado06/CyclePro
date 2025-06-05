@@ -1,7 +1,5 @@
 import javax.swing.*;
 import java.awt.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 
 public class HalamanLogin extends JFrame {
     private JTextField usernameField;
@@ -9,55 +7,74 @@ public class HalamanLogin extends JFrame {
 
     public HalamanLogin() {
         setTitle("Login - CyclePro");
-        setSize(400, 300); // Mungkin perlu disesuaikan setelah perubahan layout
+        setSize(400, 330); 
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setLocationRelativeTo(null);
         setLayout(new BorderLayout(10, 10));
 
-        // Panel judul
+        getContentPane().setBackground(Colors.BACKGROUND_PRIMARY);
+
         JPanel titlePanel = new JPanel();
+        titlePanel.setBackground(Colors.BACKGROUND_PRIMARY); 
         JLabel titleLabel = new JLabel("SELAMAT DATANG DI CYCLEPRO");
         titleLabel.setFont(new Font("Arial", Font.BOLD, 20));
+        titleLabel.setForeground(Colors.TEXT_PRIMARY); 
         titlePanel.add(titleLabel);
         add(titlePanel, BorderLayout.NORTH);
 
-        // Panel input
         JPanel inputPanel = new JPanel();
-        inputPanel.setLayout(null); // Menggunakan null layout
-        // Estimasi ukuran panel yang dibutuhkan
+        inputPanel.setLayout(null);
+        inputPanel.setBackground(Colors.BACKGROUND_SECONDARY); 
         inputPanel.setPreferredSize(new Dimension(350, 100));
+        inputPanel.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
 
 
         JLabel usernameLabel = new JLabel("Username:");
-        usernameLabel.setBounds(20, 20, 80, 25); // x, y, width, height
+        usernameLabel.setBounds(20, 20, 80, 25);
+        usernameLabel.setForeground(Colors.TEXT_PRIMARY);
         inputPanel.add(usernameLabel);
 
         usernameField = new JTextField(20);
         usernameField.setBounds(110, 20, 220, 25);
+        usernameField.setBorder(BorderFactory.createLineBorder(Colors.BORDER_COLOR));
         inputPanel.add(usernameField);
 
         JLabel passwordLabel = new JLabel("Password:");
         passwordLabel.setBounds(20, 55, 80, 25);
+        passwordLabel.setForeground(Colors.TEXT_PRIMARY);
         inputPanel.add(passwordLabel);
 
         passwordField = new JPasswordField(20);
         passwordField.setBounds(110, 55, 220, 25);
+        passwordField.setBorder(BorderFactory.createLineBorder(Colors.BORDER_COLOR));
         inputPanel.add(passwordField);
 
         add(inputPanel, BorderLayout.CENTER);
 
-        // Panel tombol
         JPanel buttonPanel = new JPanel(new FlowLayout(FlowLayout.CENTER, 10, 10));
+        buttonPanel.setBackground(Colors.BACKGROUND_PRIMARY); 
+
         JButton loginButton = new JButton("Login");
+        loginButton.setBackground(Colors.BUTTON_PRIMARY_BACKGROUND);
+        loginButton.setForeground(Colors.BUTTON_PRIMARY_TEXT);
+        loginButton.setFont(new Font("Arial", Font.BOLD, 12));
+
         JButton forgotPasswordButton = new JButton("Lupa Password");
+        forgotPasswordButton.setBackground(Colors.BUTTON_SECONDARY_BACKGROUND);
+        forgotPasswordButton.setForeground(Colors.BUTTON_SECONDARY_TEXT);
+        forgotPasswordButton.setFont(new Font("Arial", Font.PLAIN, 12));
+
+
         JButton registerButton = new JButton("Buat Akun");
+        registerButton.setBackground(Colors.BUTTON_SUCCESS_BACKGROUND);
+        registerButton.setForeground(Colors.BUTTON_SUCCESS_TEXT);
+        registerButton.setFont(new Font("Arial", Font.PLAIN, 12));
 
         buttonPanel.add(loginButton);
         buttonPanel.add(forgotPasswordButton);
         buttonPanel.add(registerButton);
         add(buttonPanel, BorderLayout.SOUTH);
 
-        // Action Listeners
         loginButton.addActionListener(e -> {
             String username = usernameField.getText();
             String password = new String(passwordField.getPassword());
@@ -69,7 +86,7 @@ public class HalamanLogin extends JFrame {
 
             User user = DatabaseHelper.authenticateUser(username, password);
             if (user != null) {
-                Main.currentUser = user; // Simpan user yang login
+                Main.currentUser = user;
                 JOptionPane.showMessageDialog(this, "Login Berhasil!");
                 new Dashboard().setVisible(true);
                 dispose();
@@ -79,12 +96,11 @@ public class HalamanLogin extends JFrame {
         });
 
         forgotPasswordButton.addActionListener(e -> {
-            new LupaPassword().setVisible(true);
-            // dispose(); // Jangan dispose halaman login jika hanya membuka lupa password
+            new LupaPassword().setVisible(true); 
         });
 
         registerButton.addActionListener(e -> {
-            new Registrasi().setVisible(true);
+            new Registrasi().setVisible(true); 
             dispose();
         });
     }

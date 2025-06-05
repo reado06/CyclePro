@@ -10,24 +10,32 @@ public class Dashboard extends JFrame {
         setSize(800, 600);
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setLocationRelativeTo(null);
-        setLayout(new BorderLayout(10, 10));
+        setLayout(new BorderLayout(0, 0)); 
+        getContentPane().setBackground(Colors.BACKGROUND_PRIMARY);
 
-        // Panel Atas (Profil)
-        JPanel topPanel = new JPanel(new FlowLayout(FlowLayout.RIGHT));
-        String username = (Main.currentUser != null) ? Main.currentUser.getUsername() : "Guest";
+
+        JPanel topPanel = new JPanel(new FlowLayout(FlowLayout.RIGHT, 15, 10)); 
+        topPanel.setBackground(Colors.NAVBAR_BACKGROUND);
+        String username = (Main.currentUser != null) ? Main.currentUser.getUsername() : "Guest"; 
         JLabel profileLabel = new JLabel("Profil: " + username + " ");
+        profileLabel.setForeground(Colors.NAVBAR_TEXT);
+        profileLabel.setFont(new Font("Arial", Font.BOLD, 14));
         topPanel.add(profileLabel);
         add(topPanel, BorderLayout.NORTH);
 
-        // Panel Tengah (Kategori Sepeda)
-        JPanel categoriesPanel = new JPanel();
-        categoriesPanel.setLayout(new BoxLayout(categoriesPanel, BoxLayout.Y_AXIS)); // List ke bawah
-        categoriesPanel.setBorder(BorderFactory.createEmptyBorder(20, 20, 20, 20));
+        JPanel categoriesOuterPanel = new JPanel(new BorderLayout());
+        categoriesOuterPanel.setBackground(Colors.BACKGROUND_PRIMARY);
+        categoriesOuterPanel.setBorder(BorderFactory.createEmptyBorder(10,10,10,10));
 
-        String[] bikeTypes = {"Sepeda BMX", "Sepeda Gunung", "Sepeda Lipat"};
-        String[] categoriesDB = {"BMX", "Gunung", "Lipat"};
-        // Pastikan path ini benar relatif terhadap classpath (misalnya, folder src)
-        String[] imagePaths = {
+
+        JPanel categoriesPanel = new JPanel();
+        categoriesPanel.setLayout(new BoxLayout(categoriesPanel, BoxLayout.Y_AXIS));
+        categoriesPanel.setBackground(Colors.BACKGROUND_PRIMARY);
+
+
+        String[] bikeTypes = {"Sepeda BMX", "Sepeda Gunung", "Sepeda Lipat"}; 
+        String[] categoriesDB = {"BMX", "Gunung", "Lipat"}; 
+        String[] imagePaths = { 
             "img/imgDashboard/sepedaBMX.png",
             "img/imgDashboard/sepedaGunung.png",
             "img/imgDashboard/sepedaLIPAT.png"
@@ -39,12 +47,17 @@ public class Dashboard extends JFrame {
             final String imagePath = imagePaths[i];
 
             JPanel categoryItemPanel = new JPanel(new FlowLayout(FlowLayout.LEFT, 20, 10));
-            categoryItemPanel.setBorder(BorderFactory.createEtchedBorder());
-            categoryItemPanel.setPreferredSize(new Dimension(700, 120)); // Atur ukuran panel item
+            categoryItemPanel.setBackground(Colors.BACKGROUND_SECONDARY);
+            categoryItemPanel.setBorder(BorderFactory.createCompoundBorder(
+                BorderFactory.createLineBorder(Colors.BORDER_COLOR, 1), 
+                BorderFactory.createEmptyBorder(10,10,10,10) 
+            ));
+            categoryItemPanel.setPreferredSize(new Dimension(700, 120));
+            categoryItemPanel.setMaximumSize(new Dimension(Integer.MAX_VALUE, 130));
+
 
             JLabel imageLabel = new JLabel();
             try {
-                // getClass().getResource() lebih baik dengan forward slashes
                 java.net.URL imgUrl = getClass().getResource(imagePath);
                 if (imgUrl != null) {
                     ImageIcon bikeIcon = new ImageIcon(imgUrl);
@@ -52,23 +65,23 @@ public class Dashboard extends JFrame {
                     imageLabel.setIcon(new ImageIcon(image));
                 } else {
                     imageLabel.setText("Gambar tidak ditemukan: " + imagePath);
-                    System.err.println("Resource not found: " + imagePath);
+                    imageLabel.setOpaque(true);
+                    imageLabel.setBackground(Color.LIGHT_GRAY);
+                    imageLabel.setForeground(Color.BLACK);
                 }
             } catch (Exception e) {
-                imageLabel.setText("Gagal Muat Gambar"); // Jika gambar gagal dimuat
+                imageLabel.setText("Gagal Muat Gambar");
                 imageLabel.setOpaque(true);
                 imageLabel.setBackground(Color.LIGHT_GRAY);
-                imageLabel.setHorizontalAlignment(SwingConstants.CENTER);
-                System.err.println("Error memuat gambar: " + imagePath + " - " + e.getMessage());
-                e.printStackTrace();
+                imageLabel.setForeground(Color.BLACK);
             }
-            imageLabel.setPreferredSize(new Dimension(100, 100)); // Ukuran label gambar
-            categoryItemPanel.add(imageLabel); // tambah label gambar ke panel item
+            imageLabel.setPreferredSize(new Dimension(100, 100));
+            categoryItemPanel.add(imageLabel);
 
-            JLabel categoryLabel = new JLabel(categoryName);
-            categoryLabel.setFont(new Font("Arial", Font.BOLD, 18));
-
-            categoryItemPanel.add(categoryLabel);
+            JLabel categoryLabelText = new JLabel(categoryName);
+            categoryLabelText.setFont(new Font("Arial", Font.BOLD, 18));
+            categoryLabelText.setForeground(Colors.TEXT_PRIMARY);
+            categoryItemPanel.add(categoryLabelText);
 
             categoryItemPanel.setCursor(new Cursor(Cursor.HAND_CURSOR));
             categoryItemPanel.addMouseListener(new MouseAdapter() {
@@ -77,19 +90,35 @@ public class Dashboard extends JFrame {
                     new KategoriSepeda(categoryDBName).setVisible(true);
                     dispose();
                 }
+                @Override
+                public void mouseEntered(MouseEvent e) {
+                    categoryItemPanel.setBackground(Colors.BACKGROUND_PRIMARY); 
+                }
+
+                @Override
+                public void mouseExited(MouseEvent e) {
+                    categoryItemPanel.setBackground(Colors.BACKGROUND_SECONDARY); 
+                }
             });
             categoriesPanel.add(categoryItemPanel);
-            categoriesPanel.add(Box.createRigidArea(new Dimension(0, 15))); // Spasi antar kategori
+            categoriesPanel.add(Box.createRigidArea(new Dimension(0, 15)));
         }
 
         JScrollPane scrollPane = new JScrollPane(categoriesPanel);
-        add(scrollPane, BorderLayout.CENTER);
+        scrollPane.setBorder(BorderFactory.createEmptyBorder()); 
+        scrollPane.setBackground(Colors.BACKGROUND_PRIMARY);
+        categoriesOuterPanel.add(scrollPane, BorderLayout.CENTER); 
+        add(categoriesOuterPanel, BorderLayout.CENTER); 
 
-        // Tombol Logout (opsional)
-        JPanel bottomPanel = new JPanel(new FlowLayout(FlowLayout.RIGHT));
+
+        JPanel bottomPanel = new JPanel(new FlowLayout(FlowLayout.RIGHT, 15,10));
+        bottomPanel.setBackground(Colors.NAVBAR_BACKGROUND); 
         JButton logoutButton = new JButton("Logout");
+        logoutButton.setBackground(Colors.BUTTON_DANGER_BACKGROUND);
+        logoutButton.setForeground(Colors.BUTTON_DANGER_TEXT);
+        logoutButton.setFont(new Font("Arial", Font.BOLD, 12));
         logoutButton.addActionListener(e -> {
-            Main.currentUser = null;
+            Main.currentUser = null; 
             new HalamanLogin().setVisible(true);
             dispose();
         });

@@ -4,7 +4,7 @@ public class Produk {
     private String category;
     private double price;
     private String description;
-    private String imagePath; // path ke gambar
+    private String imagePath;
     private int stock;
 
     public Produk(int productId, String name, String category, double price, String description, String imagePath, int stock) {
@@ -27,7 +27,7 @@ public class Produk {
     public int getStock() { return stock; }
 
     @Override
-    public String toString() { // Berguna untuk debugging atau JComboBox jika diperlukan
+    public String toString() {
         return name + " - Rp" + String.format("%,.0f", price);
     }
 }

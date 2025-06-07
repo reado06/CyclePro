@@ -36,7 +36,8 @@ public class DatabaseHelper {
                 + " username TEXT UNIQUE NOT NULL,"
                 + " password TEXT NOT NULL,"
                 + " address TEXT,"
-                + " phone_number TEXT NOT NULL"
+                + " phone_number TEXT NOT NULL,"
+                + " role TEXT DEFAULT 'user'" // <-- Pastikan tidak ada koma di akhir baris ini!
                 + ");";
 
         String productsTable = "CREATE TABLE IF NOT EXISTS products ("
@@ -58,14 +59,14 @@ public class DatabaseHelper {
                 + " courier TEXT,"
                 + " payment_method TEXT,"
                 + " total_price REAL,"
-                + " va_number TEXT NULLABLE,"
+                + " va_number TEXT," // <-- Nullable di SQL biasanya tidak perlu "NULLABLE" secara eksplisit
                 + " status TEXT DEFAULT 'Pending',"
                 + " FOREIGN KEY (user_id) REFERENCES users (user_id),"
                 + " FOREIGN KEY (product_id) REFERENCES products (product_id)"
                 + ");";
 
         try (Connection conn = connect();
-             Statement stmt = conn.createStatement()) {
+            Statement stmt = conn.createStatement()) {
             stmt.execute(usersTable);
             stmt.execute(productsTable);
             stmt.execute(ordersTable);
@@ -73,6 +74,7 @@ public class DatabaseHelper {
             addSampleProducts();
         } catch (SQLException e) {
             System.out.println("Error creating tables: " + e.getMessage());
+            e.printStackTrace(); // Tambahkan ini agar stack trace muncul dan lebih informatif
         }
     }
 
@@ -239,16 +241,77 @@ public class DatabaseHelper {
         }
     }
 
-    public static User authenticateUser(String username, String password) {
-        String sql = "SELECT user_id, username, address, phone_number FROM users WHERE username = ? AND password = ?";
+    public static Admin authenticateAdmin(String username, String password) {
+        String sql = "SELECT user_id, username, password, address, phone_number, role FROM users WHERE username = ? AND password = ? AND role = 'admin'";
+        System.out.println("DEBUG: Mencoba otentikasi admin dengan username: " + username + " dan password: " + password); // Tambah ini
         try (Connection conn = connect();
-             PreparedStatement pstmt = conn.prepareStatement(sql)) {
+            PreparedStatement pstmt = conn.prepareStatement(sql)) {
             pstmt.setString(1, username);
             pstmt.setString(2, password);
             ResultSet rs = pstmt.executeQuery();
             if (rs.next()) {
-                return new User(rs.getInt("user_id"), rs.getString("username"), "", rs.getString("address"), rs.getString("phone_number"));
+                System.out.println("DEBUG: Data admin ditemukan di database!"); 
+                System.out.println("DEBUG: Role yang ditemukan: " + rs.getString("role")); 
+                return new Admin(
+                    rs.getInt("user_id"),
+                    rs.getString("username"),
+                    rs.getString("password"),
+                    rs.getString("address"),
+                    rs.getString("phone_number")
+                );
+            } else {
+                System.out.println("DEBUG: Tidak ada data admin ditemukan untuk username: " + username + " dengan role 'admin'.");
             }
+        } catch (SQLException e) {
+            System.out.println("Authentication error for admin: " + e.getMessage());
+            e.printStackTrace();
+        }
+        return null;
+    }
+
+    public static void addDefaultAdmin() {
+        String sql = "INSERT INTO users(username, password, address, phone_number, role) VALUES(?,?,?,?,?)";
+        String checkAdminSql = "SELECT COUNT(*) FROM users WHERE username = 'admin' AND role = 'admin'";
+        System.out.println("DEBUG: Memeriksa apakah admin default sudah ada..."); // Tambah ini
+        try (Connection conn = connect();
+            Statement stmt = conn.createStatement();
+            ResultSet rs = stmt.executeQuery(checkAdminSql)) {
+            if (rs.next() && rs.getInt(1) == 0) {
+                System.out.println("DEBUG: Admin default belum ada, mencoba membuat..."); // Tambah ini
+                try (PreparedStatement pstmt = conn.prepareStatement(sql)) {
+                    pstmt.setString(1, "admin");
+                    pstmt.setString(2, "admin123");
+                    pstmt.setString(3, "Admin Address");
+                    pstmt.setString(4, "081122334455");
+                    pstmt.setString(5, "admin");
+                    int rowsAffected = pstmt.executeUpdate(); // Ambil jumlah baris yang terpengaruh
+                    if (rowsAffected > 0) {
+                        System.out.println("Default admin user 'admin' created with password 'admin123'. Rows affected: " + rowsAffected); // Perbarui ini
+                    } else {
+                        System.out.println("WARNING: Admin user 'admin' not created. Rows affected: " + rowsAffected); // Tambah ini
+                    }
+                }
+            } else {
+                System.out.println("DEBUG: Admin default sudah ada."); // Tambah ini
+            }
+        } catch (SQLException e) {
+            System.out.println("Error adding default admin: " + e.getMessage());
+            e.printStackTrace();
+        }
+    }
+
+   public static User authenticateUser(String username, String password) {
+    // Tambahkan 'password' di SELECT agar bisa diambil oleh konstruktor User
+    String sql = "SELECT user_id, username, password, address, phone_number FROM users WHERE username = ? AND password = ?";
+    try (Connection conn = connect();
+         PreparedStatement pstmt = conn.prepareStatement(sql)) {
+        pstmt.setString(1, username);
+        pstmt.setString(2, password);
+        ResultSet rs = pstmt.executeQuery();
+        if (rs.next()) {
+            // Ambil password dari ResultSet dan masukkan ke konstruktor User
+            return new User(rs.getInt("user_id"), rs.getString("username"), rs.getString("password"), rs.getString("address"), rs.getString("phone_number"));
+        }
         } catch (SQLException e) {
             System.out.println("Authentication error: " + e.getMessage());
         }
@@ -315,6 +378,149 @@ public class DatabaseHelper {
             return true;
         } catch (SQLException e) {
             System.out.println("Error creating order: " + e.getMessage());
+            return false;
+        }
+    }
+
+    public static List<Pesanan> getAllOrders() {
+        List<Pesanan> orders = new ArrayList<>();
+        // SQL JOIN untuk mengambil data pesanan, user, dan produk sekaligus
+        String sql = "SELECT o.order_id, o.user_id, o.product_id, o.order_date, " +
+                    "o.shipping_address, o.courier, o.payment_method, o.total_price, o.va_number, o.status, " +
+                    "u.username AS user_username, u.address AS user_address, u.phone_number AS user_phone_number, " +
+                    "p.name AS product_name, p.category AS product_category, p.price AS product_price, p.description AS product_description, p.image_path AS product_image_path, p.stock AS product_stock " +
+                    "FROM orders o " +
+                    "JOIN users u ON o.user_id = u.user_id " +
+                    "JOIN products p ON o.product_id = p.product_id";
+
+        try (Connection conn = connect();
+            PreparedStatement pstmt = conn.prepareStatement(sql); // Gunakan PreparedStatement meski tanpa parameter agar lebih aman
+            ResultSet rs = pstmt.executeQuery()) {
+
+            while (rs.next()) {
+                // Buat objek User
+                User user = new User(
+                    rs.getInt("user_id"),
+                    rs.getString("user_username"),
+                    "", // Password tidak perlu diambil dari DB untuk objek ini
+                    rs.getString("user_address"),
+                    rs.getString("user_phone_number")
+                );
+
+                // Buat objek Produk
+                Produk product = new Produk(
+                    rs.getInt("product_id"),
+                    rs.getString("product_name"),
+                    rs.getString("product_category"),
+                    rs.getDouble("product_price"),
+                    rs.getString("product_description"),
+                    rs.getString("product_image_path"),
+                    rs.getInt("product_stock")
+                );
+
+                // Buat objek Pesanan
+                Pesanan order = new Pesanan(
+                    rs.getInt("order_id"),
+                    user, // Masukkan objek User
+                    product, // Masukkan objek Produk
+                    rs.getString("order_date"),
+                    rs.getString("shipping_address"),
+                    rs.getString("courier"),
+                    rs.getString("payment_method"),
+                    rs.getDouble("total_price"),
+                    rs.getString("va_number"),
+                    rs.getString("status")
+                );
+                orders.add(order);
+            }
+        } catch (SQLException e) {
+            System.out.println("Error fetching all orders: " + e.getMessage());
+            e.printStackTrace();
+        }
+        return orders;
+    }
+
+    public static List<Pesanan> getOrdersByUserId(int userId) {
+    List<Pesanan> orders = new ArrayList<>();
+    String sql = "SELECT o.order_id, o.user_id, o.product_id, o.order_date, " +
+                 "o.shipping_address, o.courier, o.payment_method, o.total_price, o.va_number, o.status, " +
+                 "u.username AS user_username, u.address AS user_address, u.phone_number AS user_phone_number, " +
+                 "p.name AS product_name, p.category AS product_category, p.price AS product_price, p.description AS product_description, p.image_path AS product_image_path, p.stock AS product_stock " +
+                 "FROM orders o " +
+                 "JOIN users u ON o.user_id = u.user_id " +
+                 "JOIN products p ON o.product_id = p.product_id " +
+                 "WHERE o.user_id = ?"; // <-- Filter berdasarkan user_id
+
+    try (Connection conn = connect();
+         PreparedStatement pstmt = conn.prepareStatement(sql)) {
+        pstmt.setInt(1, userId); // Set parameter userId
+        try (ResultSet rs = pstmt.executeQuery()) {
+            while (rs.next()) {
+                User user = new User(
+                    rs.getInt("user_id"),
+                    rs.getString("user_username"),
+                    "", // Password tidak perlu diambil
+                    rs.getString("user_address"),
+                    rs.getString("user_phone_number")
+                );
+
+                Produk product = new Produk(
+                    rs.getInt("product_id"),
+                    rs.getString("product_name"),
+                    rs.getString("product_category"),
+                    rs.getDouble("product_price"),
+                    rs.getString("product_description"),
+                    rs.getString("product_image_path"),
+                    rs.getInt("product_stock")
+                );
+
+                Pesanan order = new Pesanan(
+                    rs.getInt("order_id"),
+                    user,
+                    product,
+                    rs.getString("order_date"),
+                    rs.getString("shipping_address"),
+                    rs.getString("courier"),
+                    rs.getString("payment_method"),
+                    rs.getDouble("total_price"),
+                    rs.getString("va_number"),
+                    rs.getString("status")
+                );
+                orders.add(order);
+            }
+        }
+        } catch (SQLException e) {
+            System.out.println("Error fetching orders by user ID: " + e.getMessage());
+            e.printStackTrace();
+        }
+        return orders;
+    }
+
+    public static boolean updateOrderStatus(int orderId, String newStatus) {
+        String sql = "UPDATE orders SET status = ? WHERE order_id = ?";
+        try (Connection conn = connect();
+            PreparedStatement pstmt = conn.prepareStatement(sql)) {
+            pstmt.setString(1, newStatus);
+            pstmt.setInt(2, orderId);
+            int rowsAffected = pstmt.executeUpdate();
+            return rowsAffected > 0;
+        } catch (SQLException e) {
+            System.out.println("Error updating order status: " + e.getMessage());
+            e.printStackTrace();
+            return false;
+        }
+    }
+
+    public static boolean deleteOrder(int orderId) {
+        String sql = "DELETE FROM orders WHERE order_id = ?";
+        try (Connection conn = connect();
+            PreparedStatement pstmt = conn.prepareStatement(sql)) {
+            pstmt.setInt(1, orderId);
+            int rowsAffected = pstmt.executeUpdate();
+            return rowsAffected > 0;
+        } catch (SQLException e) {
+            System.out.println("Error deleting order: " + e.getMessage());
+            e.printStackTrace();
             return false;
         }
     }

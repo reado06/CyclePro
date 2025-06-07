@@ -1,8 +1,9 @@
-import javax.swing.*;
 import java.awt.*;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.util.List;
+import javax.swing.*;
+import javax.swing.border.Border;
 
 public class KategoriSepeda extends JFrame {
     private String category;
@@ -17,46 +18,49 @@ public class KategoriSepeda extends JFrame {
         getContentPane().setBackground(Colors.BACKGROUND_PRIMARY);
 
         JPanel headerPanel = new JPanel(new FlowLayout(FlowLayout.LEFT, 15, 10));
-        headerPanel.setBackground(Colors.NAVBAR_BACKGROUND); 
+        headerPanel.setBackground(Colors.NAVBAR_BACKGROUND);
 
         JButton backButton = new JButton("Kembali ke Dashboard");
-        backButton.setBackground(Colors.BUTTON_SECONDARY_BACKGROUND); 
-        backButton.setForeground(Colors.BUTTON_SECONDARY_TEXT); 
-        backButton.setFont(new Font("Arial", Font.BOLD, 12)); 
+        backButton.setBackground(Colors.BUTTON_SECONDARY_BACKGROUND);
+        backButton.setForeground(Colors.BUTTON_SECONDARY_TEXT);
+        backButton.setFont(new Font("Arial", Font.BOLD, 12));
         headerPanel.add(backButton);
 
         headerPanel.add(Box.createHorizontalStrut(20));
 
         JLabel titleLabelText = new JLabel("Pilih Sepeda " + category);
-        titleLabelText.setFont(new Font("Arial", Font.BOLD, 24)); 
-        titleLabelText.setForeground(Colors.NAVBAR_TEXT); 
+        titleLabelText.setFont(new Font("Arial", Font.BOLD, 24));
+        titleLabelText.setForeground(Colors.NAVBAR_TEXT);
         headerPanel.add(titleLabelText);
         add(headerPanel, BorderLayout.NORTH);
 
         JPanel bikesPanelWrapper = new JPanel(new BorderLayout());
         bikesPanelWrapper.setBorder(BorderFactory.createEmptyBorder(15, 15, 15, 15));
-        bikesPanelWrapper.setBackground(Colors.BACKGROUND_PRIMARY); 
+        bikesPanelWrapper.setBackground(Colors.BACKGROUND_PRIMARY);
 
         JPanel bikesPanel = new JPanel(new GridLayout(0, 3, 15, 15));
-        bikesPanel.setBackground(Colors.BACKGROUND_PRIMARY); 
-        List<Produk> productList = DatabaseHelper.getProductsByCategory(category); 
+        bikesPanel.setBackground(Colors.BACKGROUND_PRIMARY);
+        List<Produk> productList = DatabaseHelper.getProductsByCategory(category);
 
-        if (productList.isEmpty()) { 
+        if (productList.isEmpty()) {
             bikesPanel.setLayout(new FlowLayout(FlowLayout.CENTER));
             JLabel noProductLabel = new JLabel("Tidak ada produk untuk kategori ini.");
-            noProductLabel.setFont(new Font("Arial", Font.PLAIN, 16)); 
-            noProductLabel.setForeground(Colors.TEXT_SECONDARY); 
+            noProductLabel.setFont(new Font("Arial", Font.PLAIN, 16));
+            noProductLabel.setForeground(Colors.TEXT_SECONDARY);
             bikesPanel.add(noProductLabel);
         } else {
-            for (Produk product : productList) { 
+            for (Produk product : productList) {
                 JPanel bikeItemPanel = new JPanel();
                 bikeItemPanel.setLayout(new BoxLayout(bikeItemPanel, BoxLayout.Y_AXIS));
-                bikeItemPanel.setBackground(Colors.BACKGROUND_SECONDARY); 
-                bikeItemPanel.setBorder(BorderFactory.createCompoundBorder(
-                    BorderFactory.createLineBorder(Colors.BORDER_COLOR), 
+                bikeItemPanel.setBackground(Colors.BACKGROUND_SECONDARY);
+                
+                // Simpan border default untuk dikembalikan saat mouseExited
+                Border defaultBorder = BorderFactory.createCompoundBorder(
+                    BorderFactory.createLineBorder(Colors.BORDER_COLOR, 1),
                     BorderFactory.createEmptyBorder(10,10,10,10)
-                ));
-                bikeItemPanel.setPreferredSize(new Dimension(250, 320)); 
+                );
+                bikeItemPanel.setBorder(defaultBorder);
+                bikeItemPanel.setPreferredSize(new Dimension(250, 320));
 
                 JLabel imageDisplayLabel = new JLabel();
                 imageDisplayLabel.setPreferredSize(new Dimension(200, 150));
@@ -75,7 +79,7 @@ public class KategoriSepeda extends JFrame {
                     subfolder = "produk";
                 }
 
-                String resourcePath = "/img/" + subfolder + "/" + product.getImagePath(); 
+                String resourcePath = "/img/" + subfolder + "/" + product.getImagePath();
 
                 try {
                     java.net.URL imgUrl = getClass().getResource(resourcePath);
@@ -96,23 +100,23 @@ public class KategoriSepeda extends JFrame {
                 
                 imageDisplayLabel.setAlignmentX(Component.CENTER_ALIGNMENT);
 
-                JLabel nameLabel = new JLabel(product.getName()); 
-                nameLabel.setFont(new Font("Arial", Font.BOLD, 16)); 
-                nameLabel.setForeground(Colors.TEXT_PRIMARY); 
+                JLabel nameLabel = new JLabel(product.getName());
+                nameLabel.setFont(new Font("Arial", Font.BOLD, 16));
+                nameLabel.setForeground(Colors.TEXT_PRIMARY);
                 nameLabel.setAlignmentX(Component.CENTER_ALIGNMENT);
 
-                JLabel priceLabel = new JLabel(String.format("Rp %,.0f", product.getPrice())); 
-                priceLabel.setFont(new Font("Arial", Font.PLAIN, 14)); 
-                priceLabel.setForeground(Colors.TEXT_PRIMARY); 
+                JLabel priceLabel = new JLabel(String.format("Rp %,.0f", product.getPrice()));
+                priceLabel.setFont(new Font("Arial", Font.PLAIN, 14));
+                priceLabel.setForeground(Colors.TEXT_PRIMARY);
                 priceLabel.setAlignmentX(Component.CENTER_ALIGNMENT);
 
-                JLabel stockLabel = new JLabel("Stok: " + product.getStock()); 
-                stockLabel.setFont(new Font("Arial", Font.ITALIC, 12)); 
-                stockLabel.setForeground(product.getStock() > 0 ? Colors.TEXT_SECONDARY : Colors.BUTTON_DANGER_BACKGROUND); 
+                JLabel stockLabel = new JLabel("Stok: " + product.getStock());
+                stockLabel.setFont(new Font("Arial", Font.ITALIC, 12));
+                stockLabel.setForeground(product.getStock() > 0 ? Colors.TEXT_SECONDARY : Colors.BUTTON_DANGER_BACKGROUND);
                 stockLabel.setAlignmentX(Component.CENTER_ALIGNMENT);
 
                 bikeItemPanel.add(Box.createVerticalStrut(10));
-                bikeItemPanel.add(imageDisplayLabel); 
+                bikeItemPanel.add(imageDisplayLabel);
                 bikeItemPanel.add(Box.createVerticalStrut(10));
                 bikeItemPanel.add(nameLabel);
                 bikeItemPanel.add(priceLabel);
@@ -122,10 +126,17 @@ public class KategoriSepeda extends JFrame {
 
                 bikeItemPanel.setCursor(new Cursor(Cursor.HAND_CURSOR));
                 bikeItemPanel.addMouseListener(new MouseAdapter() {
+                    // Simpan referensi warna asli untuk dikembalikan saat mouseExited
+                    Color originalBackground = bikeItemPanel.getBackground();
+                    Color originalNameForeground = nameLabel.getForeground();
+                    Color originalPriceForeground = priceLabel.getForeground();
+                    Color originalStockForeground = stockLabel.getForeground();
+
+
                     @Override
                     public void mouseClicked(MouseEvent e) {
-                        if (product.getStock() > 0) { 
-                            new HalamanPembayaran(product).setVisible(true); 
+                        if (product.getStock() > 0) {
+                            new HalamanPembayaran(product).setVisible(true);
                             dispose();
                         } else {
                             JOptionPane.showMessageDialog(KategoriSepeda.this, "Stok produk ini habis.", "Stok Habis", JOptionPane.WARNING_MESSAGE);
@@ -133,12 +144,28 @@ public class KategoriSepeda extends JFrame {
                     }
                     @Override
                     public void mouseEntered(MouseEvent e) {
-                        bikeItemPanel.setBackground(Colors.BACKGROUND_PRIMARY); 
+                        // Ubah background menjadi warna emas (sama seperti Dashboard)
+                        bikeItemPanel.setBackground(Colors.BUTTON_GOLD_BACKGROUND);
+                        // Ubah warna teks menjadi putih agar kontras
+                        nameLabel.setForeground(Color.WHITE);
+                        priceLabel.setForeground(Color.WHITE);
+                        stockLabel.setForeground(Color.WHITE);
+
+                        // Efek pop-up: border menjadi lebih tebal dan warna berbeda (sama seperti Dashboard)
+                        bikeItemPanel.setBorder(BorderFactory.createCompoundBorder(
+                            BorderFactory.createLineBorder(Colors.BUTTON_GOLD_BACKGROUND.darker(), 3), // Border lebih tebal, warna lebih gelap dari emas
+                            BorderFactory.createEmptyBorder(10,10,10,10)
+                        ));
                     }
 
                     @Override
                     public void mouseExited(MouseEvent e) {
-                        bikeItemPanel.setBackground(Colors.BACKGROUND_SECONDARY); 
+                        // Kembalikan ke warna dan border semula
+                        bikeItemPanel.setBackground(originalBackground);
+                        nameLabel.setForeground(originalNameForeground);
+                        priceLabel.setForeground(originalPriceForeground);
+                        stockLabel.setForeground(originalStockForeground);
+                        bikeItemPanel.setBorder(defaultBorder); // Kembali ke border default yang sudah disimpan
                     }
                 });
                 bikesPanel.add(bikeItemPanel);
@@ -150,7 +177,7 @@ public class KategoriSepeda extends JFrame {
         add(scrollPane, BorderLayout.CENTER);
 
         backButton.addActionListener(e -> {
-            new Dashboard().setVisible(true); 
+            new Dashboard().setVisible(true);
             dispose();
         });
     }

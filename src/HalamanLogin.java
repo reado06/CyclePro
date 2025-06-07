@@ -3,7 +3,7 @@ import java.awt.event.FocusAdapter;
 import java.awt.event.FocusEvent;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
-import java.awt.geom.RoundRectangle2D;
+import java.awt.geom.RoundRectangle2D; // Import yang benar (RoundRectangle2D, bukan RoundRectangle22D)
 import javax.swing.*;
 import javax.swing.border.EmptyBorder;
 import javax.swing.text.JTextComponent;
@@ -33,9 +33,9 @@ public class HalamanLogin extends JFrame {
                 Image scaledImage = originalImage.getScaledInstance(900, 550, Image.SCALE_SMOOTH);
                 backgroundLabel.setIcon(new ImageIcon(scaledImage));
             } else {
-                System.err.println("Background image not found: /img/DesainBG.png");
+                System.err.println("Background image not found: /img/DesainBG.png"); // Path gambar diperbarui
                 JPanel fallbackPanel = new JPanel();
-                fallbackPanel.setBackground(Colors.BACKGROUND_PRIMARY); 
+                fallbackPanel.setBackground(Colors.BACKGROUND_PRIMARY); // Fallback warna jika gambar tidak ada
                 fallbackPanel.setBounds(0, 0, 900, 550);
                 layeredPane.add(fallbackPanel, JLayeredPane.DEFAULT_LAYER);
             }
@@ -119,7 +119,7 @@ public class HalamanLogin extends JFrame {
         createAccountLabel.addMouseListener(new MouseAdapter() {
             @Override
             public void mouseClicked(MouseEvent e) {
-                new Registrasi().setVisible(true);
+                new Registrasi().setVisible(true); // Membuka halaman Registrasi
                 dispose();
             }
         });
@@ -142,7 +142,7 @@ public class HalamanLogin extends JFrame {
                 JOptionPane.showMessageDialog(this, "Login Admin Berhasil!");
                 new AdminDashboard().setVisible(true); // Membuka Admin Dashboard
                 dispose();
-                return;
+                return; // Penting agar tidak mencoba login sebagai user biasa lagi
             }
 
             // Jika bukan admin, coba login sebagai User biasa
@@ -281,6 +281,9 @@ public class HalamanLogin extends JFrame {
         }
     }
 
+    /**
+     * Inner static class for a JPasswordField with rounded corners and customizable border color.
+     */
     static class RoundedJPasswordField extends JPasswordField {
         private Shape shape;
         private int arcWidth = 20;
@@ -293,6 +296,7 @@ public class HalamanLogin extends JFrame {
             setBorder(new EmptyBorder(5, 10, 5, 10)); // Padding internal
         }
 
+        // Constructor with initial text, to be used with placeholder setup
         public RoundedJPasswordField(String text, int size) {
             super(text, size);
             setOpaque(false);

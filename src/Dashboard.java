@@ -4,6 +4,8 @@ import java.awt.event.MouseEvent;
 import javax.swing.*;
 import javax.swing.border.Border;
 import javax.swing.border.EmptyBorder;
+// Pastikan semua import yang diperlukan ada
+// import java.awt.geom.GradientPaint; // Ini tidak diperlukan jika GradientPanel tidak digunakan
 
 public class Dashboard extends JFrame {
 
@@ -95,7 +97,7 @@ public class Dashboard extends JFrame {
             final String categoryDBName = categoriesDB[i];
             final String imagePath = imagePaths[i];
 
-            JPanel categoryItemPanel = new JPanel(new BorderLayout(20, 0));
+            JPanel categoryItemPanel = new JPanel(new BorderLayout(20, 0)); // Gunakan BorderLayout untuk gambar dan teks
             categoryItemPanel.setBackground(Colors.BACKGROUND_SECONDARY); // Warna background sekunder dari Colors.java
             // Border default untuk kartu
             Border defaultBorder = BorderFactory.createCompoundBorder(
@@ -131,8 +133,8 @@ public class Dashboard extends JFrame {
             categoryItemPanel.add(imageLabel, BorderLayout.WEST);
 
             JLabel categoryLabelText = new JLabel(categoryName);
-            categoryLabelText.setFont(new Font("Arial", Font.BOLD, 22));
-            categoryLabelText.setForeground(Colors.TEXT_PRIMARY);
+            categoryLabelText.setFont(new Font("Arial", Font.BOLD, 22)); // Font lebih besar
+            categoryLabelText.setForeground(Colors.TEXT_PRIMARY); // Warna teks utama dari Colors.java
             categoryItemPanel.add(categoryLabelText, BorderLayout.CENTER);
 
             // Efek hover untuk kartu
@@ -143,18 +145,18 @@ public class Dashboard extends JFrame {
 
                 @Override
                 public void mouseClicked(MouseEvent e) {
-                    new KategoriSepeda(categoryDBName).setVisible(true);
+                    new KategoriSepeda(categoryDBName).setVisible(true); // Navigasi ke KategoriSepeda
                     dispose();
                 }
                 @Override
                 public void mouseEntered(MouseEvent e) {
                     // Warna kuning/cream saat hover
-                    categoryItemPanel.setBackground(Colors.BUTTON_GOLD_BACKGROUND);
-                    categoryLabelText.setForeground(Color.WHITE);
+                    categoryItemPanel.setBackground(Colors.BUTTON_GOLD_BACKGROUND); // Menggunakan warna emas
+                    categoryLabelText.setForeground(Color.WHITE); // Ubah warna teks menjadi putih untuk kontras
 
                     // Efek pop-up: border menjadi lebih tebal dan warna berbeda
                     categoryItemPanel.setBorder(BorderFactory.createCompoundBorder(
-                        BorderFactory.createLineBorder(Colors.BUTTON_GOLD_BACKGROUND.darker(), 3),
+                        BorderFactory.createLineBorder(Colors.BUTTON_GOLD_BACKGROUND.darker(), 3), // Border lebih tebal, warna lebih gelap dari emas
                         BorderFactory.createEmptyBorder(15, 15, 15, 15)
                     ));
                 }

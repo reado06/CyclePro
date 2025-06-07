@@ -16,7 +16,7 @@ public class Registrasi extends JFrame {
 
     public Registrasi() {
         setTitle("Buat Akun - CyclePro");
-        setSize(900, 550);
+        setSize(900, 550); // Ukuran frame disamakan dengan HalamanLogin
         setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
         setLocationRelativeTo(null);
         setResizable(false);
@@ -25,8 +25,10 @@ public class Registrasi extends JFrame {
         layeredPane.setPreferredSize(new Dimension(900, 550));
         add(layeredPane);
 
+        // Background Image Panel
         JLabel backgroundLabel = new JLabel();
         try {
+            // Menggunakan DesainBG.png sesuai screenshot terbaru
             java.net.URL imgUrl = getClass().getResource("/img/DesainBG.png");
             if (imgUrl != null) {
                 ImageIcon originalIcon = new ImageIcon(imgUrl);
@@ -36,7 +38,7 @@ public class Registrasi extends JFrame {
             } else {
                 System.err.println("Background image not found: /img/DesainBG.png");
                 JPanel fallbackPanel = new JPanel();
-                fallbackPanel.setBackground(Colors.BACKGROUND_PRIMARY);
+                fallbackPanel.setBackground(Colors.BACKGROUND_PRIMARY); // Fallback warna jika gambar tidak ada
                 fallbackPanel.setBounds(0, 0, 900, 550);
                 layeredPane.add(fallbackPanel, JLayeredPane.DEFAULT_LAYER);
             }
@@ -44,7 +46,7 @@ public class Registrasi extends JFrame {
             System.err.println("Error loading background image: " + e.getMessage());
             e.printStackTrace();
             JPanel fallbackPanel = new JPanel();
-            fallbackPanel.setBackground(Colors.BACKGROUND_PRIMARY);
+            fallbackPanel.setBackground(Colors.BACKGROUND_PRIMARY); // Fallback warna jika error
             fallbackPanel.setBounds(0, 0, 900, 550);
             layeredPane.add(fallbackPanel, JLayeredPane.DEFAULT_LAYER);
         }
@@ -57,23 +59,26 @@ public class Registrasi extends JFrame {
         registrasiPanel.setBackground(Color.WHITE);
         registrasiPanel.setBorder(BorderFactory.createEmptyBorder());
 
-        int panelWidth = 400;
-        int panelHeight = 550;
-        int panelX = 900 - panelWidth;
-        int panelY = 0;
+        // Penyesuaian ukuran dan posisi panel registrasi agar full sampai atas dan ke kanan
+        int panelWidth = 400; // Lebar tetap
+        int panelHeight = 550; // Tinggi sama dengan tinggi frame agar full vertikal
+        int panelX = 900 - panelWidth; // Dimulai dari tepi kanan
+        int panelY = 0; // Dimulai dari tepi atas
         
         registrasiPanel.setBounds(panelX, panelY, panelWidth, panelHeight);
         layeredPane.add(registrasiPanel, JLayeredPane.PALETTE_LAYER);
 
+        // Components inside Registration Panel
         int xMargin = 50;
-        int currentY = 30;
+        int currentY = 30; // Posisi Y awal sedikit lebih tinggi
         int fieldHeight = 35;
-        int spacing = 15;
+        int spacing = 15; // Spasi antar field
 
+        // Title "BUAT AKUN"
         JLabel titleLabel = new JLabel("BUAT AKUN");
         titleLabel.setFont(new Font("Arial", Font.BOLD, 22));
         titleLabel.setForeground(Colors.TEXT_PRIMARY);
-        titleLabel.setHorizontalAlignment(SwingConstants.CENTER);
+        titleLabel.setHorizontalAlignment(SwingConstants.CENTER); // Tengah
         titleLabel.setBounds(0, currentY, panelWidth, 30);
         registrasiPanel.add(titleLabel);
         currentY += 50;
@@ -295,18 +300,22 @@ public class Registrasi extends JFrame {
         }
     }
 
+    /**
+     * Inner static class for a JPasswordField with rounded corners and customizable border color.
+     */
     static class RoundedJPasswordField extends JPasswordField {
         private Shape shape;
         private int arcWidth = 20;
         private int arcHeight = 20;
-        private Color borderColor = Colors.BORDER_COLOR;
+        private Color borderColor = Colors.BORDER_COLOR; // Default border color
 
         public RoundedJPasswordField(int size) {
             super(size);
-            setOpaque(false);
-            setBorder(new EmptyBorder(5, 10, 5, 10)); 
+            setOpaque(false); // Penting agar background kustom terlihat
+            setBorder(new EmptyBorder(5, 10, 5, 10)); // Padding internal
         }
 
+        // Constructor with initial text, to be used with placeholder setup
         public RoundedJPasswordField(String text, int size) {
             super(text, size);
             setOpaque(false);
@@ -315,7 +324,7 @@ public class Registrasi extends JFrame {
 
         public void setBorderColor(Color color) {
             this.borderColor = color;
-            repaint();
+            repaint(); // Redraw component to apply new border color
         }
 
         @Override
@@ -323,10 +332,11 @@ public class Registrasi extends JFrame {
             Graphics2D g2 = (Graphics2D) g.create();
             g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
             
-            g2.setColor(getBackground());
+            // Menggambar background melengkung
+            g2.setColor(getBackground()); // Menggunakan background yang diatur di konstruktor
             g2.fill(new RoundRectangle2D.Double(0, 0, getWidth() - 1, getHeight() - 1, arcWidth, arcHeight));
             
-            super.paintComponent(g2);
+            super.paintComponent(g2); // Membiarkan super class menggambar teks (termasuk placeholder atau *echo char*)
             g2.dispose();
         }
 
@@ -334,7 +344,7 @@ public class Registrasi extends JFrame {
         protected void paintBorder(Graphics g) {
             Graphics2D g2 = (Graphics2D) g.create();
             g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
-            g2.setColor(borderColor);
+            g2.setColor(borderColor); // Warna border yang bisa berubah
             g2.draw(new RoundRectangle2D.Double(0, 0, getWidth() - 1, getHeight() - 1, arcWidth, arcHeight));
             g2.dispose();
         }

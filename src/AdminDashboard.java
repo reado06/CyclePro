@@ -223,6 +223,19 @@ public class AdminDashboard extends JFrame {
         DatabaseHelper.createTables();
         DatabaseHelper.addDefaultAdmin();
 
+        // Buat dummy user dan produk jika belum ada untuk membuat pesanan
+        // Ini untuk memastikan ada data pesanan yang bisa dilihat
+        // Anda bisa membuat pesanan manual melalui HalamanPembayaran atau tambahkan dummy di sini
+        // Misalnya:
+        // DatabaseHelper.registerUser("dummyuser", "123", "Alamat Dummy", "08111");
+        // User dummyUser = DatabaseHelper.authenticateUser("dummyuser", "123");
+        // Produk dummyProduct = DatabaseHelper.getProductsByCategory("BMX").get(0); // Ambil produk BMX pertama
+
+        // if (dummyUser != null && dummyProduct != null) {
+        //     DatabaseHelper.createOrder(dummyUser.getUserId(), dummyProduct.getProductId(), "Alamat Dummy", "SiCepat", "COD", dummyProduct.getPrice(), null);
+        // }
+
+
         // Set currentUser sebagai Admin untuk testing
         Main.currentUser = DatabaseHelper.authenticateAdmin("admin", "admin123");
 

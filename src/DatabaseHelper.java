@@ -260,7 +260,7 @@ public class DatabaseHelper {
                     rs.getString("phone_number")
                 );
             } else {
-                System.out.println("DEBUG: Tidak ada data admin ditemukan untuk username: " + username + " dengan role 'admin'.");
+                System.out.println("DEBUG: Tidak ada data admin ditemukan untuk username: " + username + " dengan role 'admin'."); // Tambah ini
             }
         } catch (SQLException e) {
             System.out.println("Authentication error for admin: " + e.getMessage());

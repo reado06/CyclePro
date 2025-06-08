@@ -1,5 +1,8 @@
 # Proyek Kelompok 4 Pemrograman Berorientasi Objek
-
+### Mubtaghi Ridho Robbi (2310631250065)
+### Nayaka Al Fikri Januar (2310631250070)
+### Faridzal Nur Fadlillah (2310631250090)
+### Irzha Adji Prabowo (2310631250093)
 
 # 🚲 CyclePro - Penjualan Sepeda 🚲
 

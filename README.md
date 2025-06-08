@@ -44,5 +44,3 @@
 -   **Tema Warna Konsisten**: Menggunakan class `Colors.java` untuk memastikan konsistensi palet warna di seluruh jendela aplikasi, memudahkan penggunaan warna di setiap class serta memberikan tampilan yang profesional.
 -   **Komponen Kustom**: Menggunakan komponen Swing kustom seperti `RoundedTextField` dan `RoundedJPasswordField` untuk input field yang lebih modern.
 -   **Efek Interaktif**: Adanya efek visual seperti perubahan warna dan border saat mouse *hover* di atas tombol atau kartu produk untuk meningkatkan pengalaman pengguna (UX).
-
----

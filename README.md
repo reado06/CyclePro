@@ -1,4 +1,4 @@
-# 🚲 CyclePro - Penjualan Sepeda 🚲 
+# 🚲 CyclePro - Penjualan Sepeda 🚲
 
 ---
 
@@ -10,43 +10,39 @@
 
 ## 🛠️ Teknologi yang Digunakan
 
-- **Java** - Bahasa pemrograman utama
-- **Java Swing** - Library GUI untuk antarmuka pengguna yang lebih modern dan kaya fitur, dibangun di atas AWT.
-- **Java AWT (Abstract Window Toolkit)** - Menyediakan dasar untuk GUI di Java, termasuk komponen dasar, grafis, dan manajemen event.
-- **Object-Oriented Programming** - Paradigma pemrograman
+-   **Java**: Bahasa pemrograman utama yang digunakan.
+-   **Java Swing & AWT**: Library yang digunakan untuk membangun antarmuka pengguna (GUI) yang interaktif dan kaya fitur.
+-   **SQLite**: Database relasional yang digunakan untuk menyimpan data pengguna, produk, dan pesanan secara lokal.
+-   **JDBC (Java Database Connectivity)**: API yang menjembatani aplikasi Java dengan database SQLite.
+-   **Object-Oriented Programming (OOP)**: Paradigma pemrograman yang mendasari struktur proyek.
 
 ---
 
-## 🧩 Komponen Utama
+## ✨ Fitur Utama
 
-### 1. Sistem Autentikasi
-- Form login dengan validasi username/password
-- Fitur "Lupa Password" dengan pertanyaan keamanan
-- Opsi pembuatan akun baru
+### 1. Sistem Autentikasi Ganda (User & Admin)
+-   **Halaman Login**: Memvalidasi kredensial pengguna dan dapat membedakan antara login untuk `User` biasa dan `Admin`.
+-   **Halaman Registrasi**: Pengguna baru dapat membuat akun dengan mengisi username, password, alamat, dan nomor telepon.
+-   **Akses Berbasis Peran**: Aplikasi mengarahkan pengguna ke dasboard yang berbeda (User Dashboard atau Admin Dashboard) tergantung pada peran akun.
 
-### 2. Dashboard
-- Tampilan inventaris sepeda
-- Ringkasan penjualan dan stok
-- Navigasi cepat ke semua fitur
+### 2. Dashboard Pengguna
+-   **Navigasi Kategori**: Tampilan utama yang memungkinkan pengguna memilih kategori sepeda yang ingin dilihat (BMX, Gunung, Lipat).
+-   **Akses Riwayat Pesanan**: Terdapat tombol untuk langsung menuju halaman riwayat pesanan pengguna.
+-   **Personalisasi**: Menampilkan sapaan "Halo, [username]!" untuk pengguna yang sedang login.
 
-### 3. Manajemen Transaksi
-- Pencatatan penjualan 
-- Cetak struk
-- Riwayat transaksi
+### 3. Dashboard Admin & Manajemen Pesanan
+-   **Tampilan Semua Pesanan**: Admin dapat melihat seluruh pesanan yang masuk dari semua pengguna dalam format tabel yang detail.
+-   **Ubah Status Pesanan**: Admin memiliki kewenangan untuk mengubah status pesanan, misalnya dari "Diproses" menjadi "Dikirim" atau "Selesai".
+-   **Hapus Pesanan**: Admin dapat menghapus data pesanan dari sistem jika diperlukan.
 
-### 4. Katalog Produk
-- Daftar sepeda dengan spesifikasi
-- Filter berdasarkan tipe, harga, dan merek
-- Update stok otomatis
+### 4. Katalog Produk dan Alur Pembayaran
+-   **Daftar Produk per Kategori**: Menampilkan produk sepeda lengkap dengan gambar, nama, harga, dan sisa stok.
+-   **Halaman Pembayaran**: Halaman checkout di mana pengguna dapat memilih metode pembayaran (Virtual Account atau COD) dan kurir pengiriman.
+-   **Cetak Struk Digital**: Setelah pembayaran, sistem akan menampilkan struk konfirmasi pesanan yang berisi detail transaksi.
 
----
-
-## 🚀 Fitur yang Akan Datang
-
-- [ ] Integrasi database (MySQL/PostgreSQL)
-- [ ] Sistem manajemen pengguna dengan multi-level akses
-- [ ] Halaman Buat Akun
-- [ ] Halaman Dashboard
-- [ ] Halaman Katalog Produk
+### 5. Desain Antarmuka Pengguna (UI)
+-   **Tema Warna Konsisten**: Menggunakan kelas `Colors.java` untuk memastikan konsistensi palet warna di seluruh jendela aplikasi, memberikan tampilan yang profesional.
+-   **Komponen Kustom**: Menggunakan komponen Swing kustom seperti `RoundedTextField` dan `RoundedJPasswordField` untuk input field yang lebih modern.
+-   **Efek Interaktif**: Adanya efek visual seperti perubahan warna dan border saat mouse *hover* di atas tombol atau kartu produk untuk meningkatkan pengalaman pengguna (UX).
 
 ---

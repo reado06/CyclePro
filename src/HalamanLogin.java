@@ -3,7 +3,7 @@ import java.awt.event.FocusAdapter;
 import java.awt.event.FocusEvent;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
-import java.awt.geom.RoundRectangle2D; // Import yang benar (RoundRectangle2D, bukan RoundRectangle22D)
+import java.awt.geom.RoundRectangle2D;
 import javax.swing.*;
 import javax.swing.border.EmptyBorder;
 import javax.swing.text.JTextComponent;
@@ -14,16 +14,15 @@ public class HalamanLogin extends JFrame {
 
     public HalamanLogin() {
         setTitle("Login - CyclePro");
-        setSize(900, 550); // Ukuran frame disesuaikan dengan desain
+        setSize(900, 550);
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setLocationRelativeTo(null);
-        setResizable(false); // Agar ukuran tidak berubah
+        setResizable(false);
 
         JLayeredPane layeredPane = new JLayeredPane();
         layeredPane.setPreferredSize(new Dimension(900, 550));
         add(layeredPane);
 
-        // Background Image Panel
         JLabel backgroundLabel = new JLabel();
         try {
             java.net.URL imgUrl = getClass().getResource("/img/DesainBG.png");
@@ -33,9 +32,9 @@ public class HalamanLogin extends JFrame {
                 Image scaledImage = originalImage.getScaledInstance(900, 550, Image.SCALE_SMOOTH);
                 backgroundLabel.setIcon(new ImageIcon(scaledImage));
             } else {
-                System.err.println("Background image not found: /img/DesainBG.png"); // Path gambar diperbarui
+                System.err.println("Background image not found: /img/DesainBG.png");
                 JPanel fallbackPanel = new JPanel();
-                fallbackPanel.setBackground(Colors.BACKGROUND_PRIMARY); // Fallback warna jika gambar tidak ada
+                fallbackPanel.setBackground(Colors.BACKGROUND_PRIMARY);
                 fallbackPanel.setBounds(0, 0, 900, 550);
                 layeredPane.add(fallbackPanel, JLayeredPane.DEFAULT_LAYER);
             }
@@ -43,14 +42,13 @@ public class HalamanLogin extends JFrame {
             System.err.println("Error loading background image: " + e.getMessage());
             e.printStackTrace();
             JPanel fallbackPanel = new JPanel();
-            fallbackPanel.setBackground(Colors.BACKGROUND_PRIMARY); // Fallback warna jika error
+            fallbackPanel.setBackground(Colors.BACKGROUND_PRIMARY);
             fallbackPanel.setBounds(0, 0, 900, 550);
             layeredPane.add(fallbackPanel, JLayeredPane.DEFAULT_LAYER);
         }
         backgroundLabel.setBounds(0, 0, 900, 550);
         layeredPane.add(backgroundLabel, JLayeredPane.DEFAULT_LAYER);
 
-        // Login Panel
         JPanel loginPanel = new JPanel();
         loginPanel.setLayout(null);
         loginPanel.setBackground(Color.WHITE);
@@ -63,13 +61,11 @@ public class HalamanLogin extends JFrame {
         loginPanel.setBounds(panelX, panelY, panelWidth, panelHeight);
         layeredPane.add(loginPanel, JLayeredPane.PALETTE_LAYER);
 
-        // Components inside Login Panel
         int xMargin = 50;
         int currentY = 50;
         int fieldHeight = 35;
         int spacing = 20;
 
-        // Title "USER LOGIN"
         JLabel titleLabel = new JLabel("USER LOGIN");
         titleLabel.setFont(new Font("Arial", Font.BOLD, 22));
         titleLabel.setForeground(Colors.TEXT_PRIMARY);
@@ -78,25 +74,22 @@ public class HalamanLogin extends JFrame {
         loginPanel.add(titleLabel);
         currentY += 50;
 
-        // Username Field
-        usernameField = new RoundedTextField("Username", 20); // Placeholder "Username"
+        usernameField = new RoundedTextField("Username", 20);
         usernameField.setFont(new Font("Arial", Font.PLAIN, 14));
         usernameField.setBackground(Color.WHITE);
         usernameField.setBounds(xMargin, currentY, panelWidth - (2 * xMargin), fieldHeight);
         loginPanel.add(usernameField);
-        addPlaceholderAndFocusListeners(usernameField, "Username", false); // Tambahkan listener fokus
+        addPlaceholderAndFocusListeners(usernameField, "Username", false);
         currentY += fieldHeight + spacing;
 
-        // Password Field
-        passwordField = new RoundedJPasswordField("Masukkan Password", 20); // Menggunakan RoundedJPasswordField
+        passwordField = new RoundedJPasswordField("Masukkan Password", 20);
         passwordField.setFont(new Font("Arial", Font.PLAIN, 14));
         passwordField.setBackground(Color.WHITE);
         passwordField.setBounds(xMargin, currentY, panelWidth - (2 * xMargin), fieldHeight);
         loginPanel.add(passwordField);
-        addPlaceholderAndFocusListeners(passwordField, "Masukkan Password", true); // Tambahkan listener fokus
-        currentY += fieldHeight + 20; // Spasi disesuaikan setelah password field
+        addPlaceholderAndFocusListeners(passwordField, "Masukkan Password", true);
+        currentY += fieldHeight + 20;
 
-        // Login Button
         JButton loginButton = new JButton("Login");
         loginButton.setBackground(new Color(0xD4AF37));
         loginButton.setForeground(Color.WHITE);
@@ -108,7 +101,6 @@ public class HalamanLogin extends JFrame {
         loginPanel.add(loginButton);
         currentY += 40 + 20;
 
-        // "Buat Akun" (Register) link - Dipusatkan
         JLabel createAccountLabel = new JLabel("Buat Akun");
         createAccountLabel.setFont(new Font("Arial", Font.PLAIN, 12));
         createAccountLabel.setForeground(Colors.TEXT_LINK);
@@ -119,38 +111,34 @@ public class HalamanLogin extends JFrame {
         createAccountLabel.addMouseListener(new MouseAdapter() {
             @Override
             public void mouseClicked(MouseEvent e) {
-                new Registrasi().setVisible(true); // Membuka halaman Registrasi
+                new Registrasi().setVisible(true);
                 dispose();
             }
         });
 
-        // --- Action Listeners for Login Button (Ini yang paling penting!) ---
         loginButton.addActionListener(e -> {
             String username = usernameField.getText();
             String password = new String(passwordField.getPassword());
 
-            // Validasi placeholder
             if (username.isEmpty() || username.equals("Username") || password.isEmpty() || password.equals("Masukkan Password")) {
                 JOptionPane.showMessageDialog(this, "Username dan password tidak boleh kosong!", "Error", JOptionPane.ERROR_MESSAGE);
                 return;
             }
 
-            // Coba login sebagai Admin
             Admin adminUser = DatabaseHelper.authenticateAdmin(username, password);
             if (adminUser != null) {
                 Main.currentUser = adminUser;
                 JOptionPane.showMessageDialog(this, "Login Admin Berhasil!");
-                new AdminDashboard().setVisible(true); // Membuka Admin Dashboard
+                new AdminDashboard().setVisible(true);
                 dispose();
-                return; // Penting agar tidak mencoba login sebagai user biasa lagi
+                return;
             }
 
-            // Jika bukan admin, coba login sebagai User biasa
             User regularUser = DatabaseHelper.authenticateUser(username, password);
             if (regularUser != null) {
                 Main.currentUser = regularUser;
                 JOptionPane.showMessageDialog(this, "Login Pengguna Berhasil!");
-                new Dashboard().setVisible(true); // Membuka Dashboard user biasa
+                new Dashboard().setVisible(true);
                 dispose();
             } else {
                 JOptionPane.showMessageDialog(this, "Username atau password salah.", "Login Gagal", JOptionPane.ERROR_MESSAGE);
@@ -158,13 +146,11 @@ public class HalamanLogin extends JFrame {
         });
     }
 
-    // Helper method to add focus listeners for placeholder behavior and border color change
     private void addPlaceholderAndFocusListeners(JTextComponent field, String placeholder, boolean isPasswordField) {
-        // Set initial state based on placeholder
         if (isPasswordField) {
             JPasswordField pf = (JPasswordField) field;
             pf.setText(placeholder);
-            pf.setEchoChar((char) 0); // Show placeholder text
+            pf.setEchoChar((char) 0);
             pf.setForeground(Colors.TEXT_SECONDARY);
         } else {
             JTextField tf = (JTextField) field;
@@ -179,7 +165,7 @@ public class HalamanLogin extends JFrame {
                     JPasswordField pf = (JPasswordField) field;
                     if (new String(pf.getPassword()).equals(placeholder)) {
                         pf.setText("");
-                        pf.setEchoChar('*'); // Sembunyikan karakter password
+                        pf.setEchoChar('*');
                         pf.setForeground(Colors.TEXT_PRIMARY);
                     }
                 } else {
@@ -223,22 +209,18 @@ public class HalamanLogin extends JFrame {
         });
     }
 
-    /**
-     * Inner static class for a JTextField with rounded corners and customizable border color.
-     */
     static class RoundedTextField extends JTextField {
         private Shape shape;
         private int arcWidth = 20;
         private int arcHeight = 20;
-        private Color borderColor = Colors.BORDER_COLOR; // Default border color
+        private Color borderColor = Colors.BORDER_COLOR;
 
         public RoundedTextField(int size) {
             super(size);
-            setOpaque(false); // Penting agar background kustom terlihat
-            setBorder(new EmptyBorder(5, 10, 5, 10)); // Padding internal
+            setOpaque(false);
+            setBorder(new EmptyBorder(5, 10, 5, 10));
         }
-        
-        // Constructor with initial text, to be used with placeholder setup
+
         public RoundedTextField(String text, int size) {
             super(text, size);
             setOpaque(false);
@@ -247,19 +229,16 @@ public class HalamanLogin extends JFrame {
 
         public void setBorderColor(Color color) {
             this.borderColor = color;
-            repaint(); // Redraw component to apply new border color
+            repaint();
         }
 
         @Override
         protected void paintComponent(Graphics g) {
             Graphics2D g2 = (Graphics2D) g.create();
             g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
-            
-            // Menggambar background melengkung
-            g2.setColor(getBackground()); // Menggunakan background yang diatur di konstruktor
+            g2.setColor(getBackground());
             g2.fill(new RoundRectangle2D.Double(0, 0, getWidth() - 1, getHeight() - 1, arcWidth, arcHeight));
-            
-            super.paintComponent(g2); // Membiarkan super class menggambar teks
+            super.paintComponent(g2);
             g2.dispose();
         }
 
@@ -267,7 +246,7 @@ public class HalamanLogin extends JFrame {
         protected void paintBorder(Graphics g) {
             Graphics2D g2 = (Graphics2D) g.create();
             g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
-            g2.setColor(borderColor); // Warna border yang bisa berubah
+            g2.setColor(borderColor);
             g2.draw(new RoundRectangle2D.Double(0, 0, getWidth() - 1, getHeight() - 1, arcWidth, arcHeight));
             g2.dispose();
         }
@@ -281,22 +260,18 @@ public class HalamanLogin extends JFrame {
         }
     }
 
-    /**
-     * Inner static class for a JPasswordField with rounded corners and customizable border color.
-     */
     static class RoundedJPasswordField extends JPasswordField {
         private Shape shape;
         private int arcWidth = 20;
         private int arcHeight = 20;
-        private Color borderColor = Colors.BORDER_COLOR; // Default border color
+        private Color borderColor = Colors.BORDER_COLOR;
 
         public RoundedJPasswordField(int size) {
             super(size);
-            setOpaque(false); // Penting agar background kustom terlihat
-            setBorder(new EmptyBorder(5, 10, 5, 10)); // Padding internal
+            setOpaque(false);
+            setBorder(new EmptyBorder(5, 10, 5, 10));
         }
 
-        // Constructor with initial text, to be used with placeholder setup
         public RoundedJPasswordField(String text, int size) {
             super(text, size);
             setOpaque(false);
@@ -305,19 +280,16 @@ public class HalamanLogin extends JFrame {
 
         public void setBorderColor(Color color) {
             this.borderColor = color;
-            repaint(); // Redraw component to apply new border color
+            repaint();
         }
 
         @Override
         protected void paintComponent(Graphics g) {
             Graphics2D g2 = (Graphics2D) g.create();
             g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
-            
-            // Menggambar background melengkung
-            g2.setColor(getBackground()); // Menggunakan background yang diatur di konstruktor
+            g2.setColor(getBackground());
             g2.fill(new RoundRectangle2D.Double(0, 0, getWidth() - 1, getHeight() - 1, arcWidth, arcHeight));
-            
-            super.paintComponent(g2); // Membiarkan super class menggambar teks (termasuk placeholder atau *echo char*)
+            super.paintComponent(g2);
             g2.dispose();
         }
 
@@ -325,7 +297,7 @@ public class HalamanLogin extends JFrame {
         protected void paintBorder(Graphics g) {
             Graphics2D g2 = (Graphics2D) g.create();
             g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
-            g2.setColor(borderColor); // Warna border yang bisa berubah
+            g2.setColor(borderColor);
             g2.draw(new RoundRectangle2D.Double(0, 0, getWidth() - 1, getHeight() - 1, arcWidth, arcHeight));
             g2.dispose();
         }

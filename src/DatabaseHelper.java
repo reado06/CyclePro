@@ -37,7 +37,7 @@ public class DatabaseHelper {
                 + " password TEXT NOT NULL,"
                 + " address TEXT,"
                 + " phone_number TEXT NOT NULL,"
-                + " role TEXT DEFAULT 'user'" // <-- Pastikan tidak ada koma di akhir baris ini!
+                + " role TEXT DEFAULT 'user'" 
                 + ");";
 
         String productsTable = "CREATE TABLE IF NOT EXISTS products ("
@@ -59,7 +59,7 @@ public class DatabaseHelper {
                 + " courier TEXT,"
                 + " payment_method TEXT,"
                 + " total_price REAL,"
-                + " va_number TEXT," // <-- Nullable di SQL biasanya tidak perlu "NULLABLE" secara eksplisit
+                + " va_number TEXT," 
                 + " status TEXT DEFAULT 'Pending',"
                 + " FOREIGN KEY (user_id) REFERENCES users (user_id),"
                 + " FOREIGN KEY (product_id) REFERENCES products (product_id)"
@@ -74,7 +74,7 @@ public class DatabaseHelper {
             addSampleProducts();
         } catch (SQLException e) {
             System.out.println("Error creating tables: " + e.getMessage());
-            e.printStackTrace(); // Tambahkan ini agar stack trace muncul dan lebih informatif
+            e.printStackTrace(); 
         }
     }
 
@@ -243,7 +243,7 @@ public class DatabaseHelper {
 
     public static Admin authenticateAdmin(String username, String password) {
         String sql = "SELECT user_id, username, password, address, phone_number, role FROM users WHERE username = ? AND password = ? AND role = 'admin'";
-        System.out.println("DEBUG: Mencoba otentikasi admin dengan username: " + username + " dan password: " + password); // Tambah ini
+        System.out.println("DEBUG: Mencoba otentikasi admin dengan username: " + username + " dan password: " + password); 
         try (Connection conn = connect();
             PreparedStatement pstmt = conn.prepareStatement(sql)) {
             pstmt.setString(1, username);
@@ -260,7 +260,7 @@ public class DatabaseHelper {
                     rs.getString("phone_number")
                 );
             } else {
-                System.out.println("DEBUG: Tidak ada data admin ditemukan untuk username: " + username + " dengan role 'admin'."); // Tambah ini
+                System.out.println("DEBUG: Tidak ada data admin ditemukan untuk username: " + username + " dengan role 'admin'."); 
             }
         } catch (SQLException e) {
             System.out.println("Authentication error for admin: " + e.getMessage());
@@ -272,27 +272,27 @@ public class DatabaseHelper {
     public static void addDefaultAdmin() {
         String sql = "INSERT INTO users(username, password, address, phone_number, role) VALUES(?,?,?,?,?)";
         String checkAdminSql = "SELECT COUNT(*) FROM users WHERE username = 'admin' AND role = 'admin'";
-        System.out.println("DEBUG: Memeriksa apakah admin default sudah ada..."); // Tambah ini
+        System.out.println("DEBUG: Memeriksa apakah admin default sudah ada..."); 
         try (Connection conn = connect();
             Statement stmt = conn.createStatement();
             ResultSet rs = stmt.executeQuery(checkAdminSql)) {
             if (rs.next() && rs.getInt(1) == 0) {
-                System.out.println("DEBUG: Admin default belum ada, mencoba membuat..."); // Tambah ini
+                System.out.println("DEBUG: Admin default belum ada, mencoba membuat..."); 
                 try (PreparedStatement pstmt = conn.prepareStatement(sql)) {
                     pstmt.setString(1, "admin");
                     pstmt.setString(2, "admin123");
                     pstmt.setString(3, "Admin Address");
                     pstmt.setString(4, "081122334455");
                     pstmt.setString(5, "admin");
-                    int rowsAffected = pstmt.executeUpdate(); // Ambil jumlah baris yang terpengaruh
+                    int rowsAffected = pstmt.executeUpdate(); 
                     if (rowsAffected > 0) {
-                        System.out.println("Default admin user 'admin' created with password 'admin123'. Rows affected: " + rowsAffected); // Perbarui ini
+                        System.out.println("Default admin user 'admin' created with password 'admin123'. Rows affected: " + rowsAffected);
                     } else {
-                        System.out.println("WARNING: Admin user 'admin' not created. Rows affected: " + rowsAffected); // Tambah ini
+                        System.out.println("WARNING: Admin user 'admin' not created. Rows affected: " + rowsAffected); 
                     }
                 }
             } else {
-                System.out.println("DEBUG: Admin default sudah ada."); // Tambah ini
+                System.out.println("DEBUG: Admin default sudah ada.");
             }
         } catch (SQLException e) {
             System.out.println("Error adding default admin: " + e.getMessage());
@@ -301,7 +301,6 @@ public class DatabaseHelper {
     }
 
    public static User authenticateUser(String username, String password) {
-    // Tambahkan 'password' di SELECT agar bisa diambil oleh konstruktor User
     String sql = "SELECT user_id, username, password, address, phone_number FROM users WHERE username = ? AND password = ?";
     try (Connection conn = connect();
          PreparedStatement pstmt = conn.prepareStatement(sql)) {
@@ -309,7 +308,6 @@ public class DatabaseHelper {
         pstmt.setString(2, password);
         ResultSet rs = pstmt.executeQuery();
         if (rs.next()) {
-            // Ambil password dari ResultSet dan masukkan ke konstruktor User
             return new User(rs.getInt("user_id"), rs.getString("username"), rs.getString("password"), rs.getString("address"), rs.getString("phone_number"));
         }
         } catch (SQLException e) {
@@ -384,7 +382,6 @@ public class DatabaseHelper {
 
     public static List<Pesanan> getAllOrders() {
         List<Pesanan> orders = new ArrayList<>();
-        // SQL JOIN untuk mengambil data pesanan, user, dan produk sekaligus
         String sql = "SELECT o.order_id, o.user_id, o.product_id, o.order_date, " +
                     "o.shipping_address, o.courier, o.payment_method, o.total_price, o.va_number, o.status, " +
                     "u.username AS user_username, u.address AS user_address, u.phone_number AS user_phone_number, " +
@@ -402,7 +399,7 @@ public class DatabaseHelper {
                 User user = new User(
                     rs.getInt("user_id"),
                     rs.getString("user_username"),
-                    "", // Password tidak perlu diambil dari DB untuk objek ini
+                    "",
                     rs.getString("user_address"),
                     rs.getString("user_phone_number")
                 );
@@ -421,8 +418,8 @@ public class DatabaseHelper {
                 // Buat objek Pesanan
                 Pesanan order = new Pesanan(
                     rs.getInt("order_id"),
-                    user, // Masukkan objek User
-                    product, // Masukkan objek Produk
+                    user, 
+                    product, 
                     rs.getString("order_date"),
                     rs.getString("shipping_address"),
                     rs.getString("courier"),
@@ -449,17 +446,17 @@ public class DatabaseHelper {
                  "FROM orders o " +
                  "JOIN users u ON o.user_id = u.user_id " +
                  "JOIN products p ON o.product_id = p.product_id " +
-                 "WHERE o.user_id = ?"; // <-- Filter berdasarkan user_id
+                 "WHERE o.user_id = ?"; 
 
     try (Connection conn = connect();
          PreparedStatement pstmt = conn.prepareStatement(sql)) {
-        pstmt.setInt(1, userId); // Set parameter userId
+        pstmt.setInt(1, userId); 
         try (ResultSet rs = pstmt.executeQuery()) {
             while (rs.next()) {
                 User user = new User(
                     rs.getInt("user_id"),
                     rs.getString("user_username"),
-                    "", // Password tidak perlu diambil
+                    "", 
                     rs.getString("user_address"),
                     rs.getString("user_phone_number")
                 );

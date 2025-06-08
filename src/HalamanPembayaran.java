@@ -84,7 +84,6 @@ public class HalamanPembayaran extends JFrame {
             subfolder = "produk"; 
         }
 
-        // Path untuk classpath resource
         String resourcePath = "/img/" + subfolder + "/" + selectedProduct.getImagePath(); 
 
         try {
@@ -106,7 +105,6 @@ public class HalamanPembayaran extends JFrame {
         
         productImagePanel.add(imageLabel, BorderLayout.CENTER);
         mainContentPanel.add(productImagePanel, BorderLayout.EAST);
-
 
         // Panel Detail dan Form
         JPanel detailsFormPanel = new JPanel();

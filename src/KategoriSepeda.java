@@ -54,7 +54,6 @@ public class KategoriSepeda extends JFrame {
                 bikeItemPanel.setLayout(new BoxLayout(bikeItemPanel, BoxLayout.Y_AXIS));
                 bikeItemPanel.setBackground(Colors.BACKGROUND_SECONDARY);
                 
-                // Simpan border default untuk dikembalikan saat mouseExited
                 Border defaultBorder = BorderFactory.createCompoundBorder(
                     BorderFactory.createLineBorder(Colors.BORDER_COLOR, 1),
                     BorderFactory.createEmptyBorder(10,10,10,10)
@@ -123,15 +122,12 @@ public class KategoriSepeda extends JFrame {
                 bikeItemPanel.add(stockLabel);
                 bikeItemPanel.add(Box.createVerticalStrut(10));
 
-
                 bikeItemPanel.setCursor(new Cursor(Cursor.HAND_CURSOR));
                 bikeItemPanel.addMouseListener(new MouseAdapter() {
-                    // Simpan referensi warna asli untuk dikembalikan saat mouseExited
                     Color originalBackground = bikeItemPanel.getBackground();
                     Color originalNameForeground = nameLabel.getForeground();
                     Color originalPriceForeground = priceLabel.getForeground();
                     Color originalStockForeground = stockLabel.getForeground();
-
 
                     @Override
                     public void mouseClicked(MouseEvent e) {
@@ -144,28 +140,24 @@ public class KategoriSepeda extends JFrame {
                     }
                     @Override
                     public void mouseEntered(MouseEvent e) {
-                        // Ubah background menjadi warna emas (sama seperti Dashboard)
                         bikeItemPanel.setBackground(Colors.BUTTON_GOLD_BACKGROUND);
-                        // Ubah warna teks menjadi putih agar kontras
                         nameLabel.setForeground(Color.WHITE);
                         priceLabel.setForeground(Color.WHITE);
                         stockLabel.setForeground(Color.WHITE);
 
-                        // Efek pop-up: border menjadi lebih tebal dan warna berbeda (sama seperti Dashboard)
                         bikeItemPanel.setBorder(BorderFactory.createCompoundBorder(
-                            BorderFactory.createLineBorder(Colors.BUTTON_GOLD_BACKGROUND.darker(), 3), // Border lebih tebal, warna lebih gelap dari emas
+                            BorderFactory.createLineBorder(Colors.BUTTON_GOLD_BACKGROUND.darker(), 3),
                             BorderFactory.createEmptyBorder(10,10,10,10)
                         ));
                     }
 
                     @Override
                     public void mouseExited(MouseEvent e) {
-                        // Kembalikan ke warna dan border semula
                         bikeItemPanel.setBackground(originalBackground);
                         nameLabel.setForeground(originalNameForeground);
                         priceLabel.setForeground(originalPriceForeground);
                         stockLabel.setForeground(originalStockForeground);
-                        bikeItemPanel.setBorder(defaultBorder); // Kembali ke border default yang sudah disimpan
+                        bikeItemPanel.setBorder(defaultBorder);
                     }
                 });
                 bikesPanel.add(bikeItemPanel);

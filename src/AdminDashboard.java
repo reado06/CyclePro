@@ -15,19 +15,18 @@ public class AdminDashboard extends JFrame {
 
     public AdminDashboard() {
         setTitle("Admin Dashboard - Kelola Pesanan");
-        setSize(1000, 700); // Ukuran lebih besar untuk tabel
+        setSize(1000, 700);
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        setLocationRelativeTo(null); // Posisikan di tengah layar
-        setLayout(new BorderLayout(10, 10)); // Layout utama dengan jarak
+        setLocationRelativeTo(null);
+        setLayout(new BorderLayout(10, 10));
 
-        getContentPane().setBackground(Colors.BACKGROUND_PRIMARY); // Gunakan warna dari Colors.java
+        getContentPane().setBackground(Colors.BACKGROUND_PRIMARY);
 
-        // --- Panel Atas (Header/Navbar Admin) ---
         JPanel headerPanel = new JPanel(new BorderLayout(10, 0));
         headerPanel.setBackground(Colors.NAVBAR_BACKGROUND);
         headerPanel.setBorder(new EmptyBorder(10, 15, 10, 15));
 
-        JLabel titleLabel = new JLabel("Panel Administrasi");
+        JLabel titleLabel = new JLabel("Data Pesanan");
         titleLabel.setFont(new Font("Arial", Font.BOLD, 28));
         titleLabel.setForeground(Colors.NAVBAR_TEXT);
         headerPanel.add(titleLabel, BorderLayout.WEST);
@@ -39,16 +38,14 @@ public class AdminDashboard extends JFrame {
 
         add(headerPanel, BorderLayout.NORTH);
 
-        // --- Panel Tengah (Tabel Pesanan) ---
         JPanel mainContentPanel = new JPanel(new BorderLayout());
         mainContentPanel.setBorder(BorderFactory.createEmptyBorder(15, 15, 15, 15));
         mainContentPanel.setBackground(Colors.BACKGROUND_PRIMARY);
 
-        // Tabel Model
         tableModel = new DefaultTableModel(new Object[]{"ID Pesanan", "User", "Produk", "Tanggal", "Total", "Status", "Alamat Pengiriman", "Kurir", "Metode Bayar", "VA Number"}, 0) {
             @Override
             public boolean isCellEditable(int row, int column) {
-                return false; // Kolom tidak bisa diedit langsung dari tabel
+                return false;
             }
         };
         ordersTable = new JTable(tableModel);
@@ -57,7 +54,7 @@ public class AdminDashboard extends JFrame {
         ordersTable.getTableHeader().setFont(new Font("Arial", Font.BOLD, 12));
         ordersTable.getTableHeader().setBackground(Colors.BUTTON_PRIMARY_BACKGROUND);
         ordersTable.getTableHeader().setForeground(Colors.BUTTON_PRIMARY_TEXT);
-        ordersTable.setSelectionBackground(Colors.BUTTON_PRIMARY_BACKGROUND.brighter()); // Warna highlight saat dipilih
+        ordersTable.setSelectionBackground(Colors.BUTTON_PRIMARY_BACKGROUND.brighter());
         ordersTable.setSelectionForeground(Color.WHITE);
 
         JScrollPane scrollPane = new JScrollPane(ordersTable);
@@ -66,7 +63,6 @@ public class AdminDashboard extends JFrame {
 
         add(mainContentPanel, BorderLayout.CENTER);
 
-        // --- Panel Bawah (Tombol Aksi) ---
         JPanel actionPanel = new JPanel(new FlowLayout(FlowLayout.RIGHT, 15, 10));
         actionPanel.setBackground(Colors.BACKGROUND_PRIMARY);
 
@@ -87,8 +83,8 @@ public class AdminDashboard extends JFrame {
             public void actionPerformed(ActionEvent e) {
                 int selectedRow = ordersTable.getSelectedRow();
                 if (selectedRow != -1) {
-                    int orderId = (int) ordersTable.getValueAt(selectedRow, 0); // Kolom 0 adalah ID Pesanan
-                    String currentStatus = (String) ordersTable.getValueAt(selectedRow, 5); // Kolom 5 adalah Status
+                    int orderId = (int) ordersTable.getValueAt(selectedRow, 0);
+                    String currentStatus = (String) ordersTable.getValueAt(selectedRow, 5);
 
                     String[] statusOptions = {"Pending", "Diproses", "Dikirim", "Selesai", "Dibatalkan"};
                     String newStatus = (String) JOptionPane.showInputDialog(
@@ -104,7 +100,7 @@ public class AdminDashboard extends JFrame {
                     if (newStatus != null && !newStatus.equals(currentStatus)) {
                         if (DatabaseHelper.updateOrderStatus(orderId, newStatus)) {
                             JOptionPane.showMessageDialog(AdminDashboard.this, "Status pesanan berhasil diperbarui!");
-                            loadOrdersData(); // Muat ulang data setelah perubahan
+                            loadOrdersData();
                         } else {
                             JOptionPane.showMessageDialog(AdminDashboard.this, "Gagal memperbarui status pesanan.", "Error", JOptionPane.ERROR_MESSAGE);
                         }
@@ -123,9 +119,9 @@ public class AdminDashboard extends JFrame {
             public void actionPerformed(ActionEvent e) {
                 int selectedRow = ordersTable.getSelectedRow();
                 if (selectedRow != -1) {
-                    int orderId = (int) ordersTable.getValueAt(selectedRow, 0); // Kolom 0 adalah ID Pesanan
-                    String userName = (String) ordersTable.getValueAt(selectedRow, 1); // Kolom 1 adalah User
-                    String productName = (String) ordersTable.getValueAt(selectedRow, 2); // Kolom 2 adalah Produk
+                    int orderId = (int) ordersTable.getValueAt(selectedRow, 0);
+                    String userName = (String) ordersTable.getValueAt(selectedRow, 1);
+                    String productName = (String) ordersTable.getValueAt(selectedRow, 2);
 
                     int confirm = JOptionPane.showConfirmDialog(AdminDashboard.this,
                             "Yakin ingin menghapus pesanan ID: " + orderId + " dari " + userName + " untuk produk " + productName + "?",
@@ -134,7 +130,7 @@ public class AdminDashboard extends JFrame {
                     if (confirm == JOptionPane.YES_OPTION) {
                         if (DatabaseHelper.deleteOrder(orderId)) {
                             JOptionPane.showMessageDialog(AdminDashboard.this, "Pesanan berhasil dihapus!");
-                            loadOrdersData(); // Muat ulang data setelah penghapusan
+                            loadOrdersData();
                         } else {
                             JOptionPane.showMessageDialog(AdminDashboard.this, "Gagal menghapus pesanan.", "Error", JOptionPane.ERROR_MESSAGE);
                         }
@@ -151,31 +147,26 @@ public class AdminDashboard extends JFrame {
         logoutButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                Main.currentUser = null; // Clear current user
-                new HalamanLogin().setVisible(true); // Go back to login page
-                dispose(); // Close AdminDashboard
+                Main.currentUser = null;
+                new HalamanLogin().setVisible(true);
+                dispose();
             }
         });
         actionPanel.add(logoutButton);
 
-
         add(actionPanel, BorderLayout.SOUTH);
 
-        // Muat data pesanan saat pertama kali dashboard dibuka
         loadOrdersData();
     }
 
-    // Metode untuk memuat data pesanan dari database dan menampilkannya di tabel
     private void loadOrdersData() {
-        tableModel.setRowCount(0); // Hapus semua baris yang ada di tabel
-        List<Pesanan> orders = DatabaseHelper.getAllOrders(); // Ambil semua pesanan dari database
+        tableModel.setRowCount(0);
+        List<Pesanan> orders = DatabaseHelper.getAllOrders();
 
         if (orders.isEmpty()) {
-            // Jika tidak ada pesanan, tampilkan pesan di konsol atau di UI
             System.out.println("Tidak ada pesanan ditemukan.");
         } else {
             for (Pesanan order : orders) {
-                // Pastikan Anda mendapatkan username dan nama produk dari objek User dan Produk di dalam Pesanan
                 String userName = (order.getUser() != null) ? order.getUser().getUsername() : "N/A";
                 String productName = (order.getProduct() != null) ? order.getProduct().getName() : "N/A";
 
@@ -184,7 +175,7 @@ public class AdminDashboard extends JFrame {
                     userName,
                     productName,
                     order.getOrderDate(),
-                    String.format("Rp %,.0f", order.getTotalPrice()), // Format harga
+                    String.format("Rp %,.0f", order.getTotalPrice()),
                     order.getStatus(),
                     order.getShippingAddress(),
                     order.getCourier(),
@@ -195,18 +186,17 @@ public class AdminDashboard extends JFrame {
         }
     }
 
-    // Metode pembantu untuk menata gaya tombol
     private void styleButton(JButton button, Color bgColor, Color textColor) {
         button.setBackground(bgColor);
         button.setForeground(textColor);
         button.setFont(new Font("Arial", Font.BOLD, 14));
-        button.setFocusPainted(false); // Hilangkan border fokus
-        button.setBorder(BorderFactory.createEmptyBorder(8, 15, 8, 15)); // Padding
-        button.setCursor(new Cursor(Cursor.HAND_CURSOR)); // Cursor tangan saat hover
+        button.setFocusPainted(false);
+        button.setBorder(BorderFactory.createEmptyBorder(8, 15, 8, 15));
+        button.setCursor(new Cursor(Cursor.HAND_CURSOR));
         button.addMouseListener(new MouseAdapter() {
             @Override
             public void mouseEntered(MouseEvent e) {
-                button.setBackground(bgColor.darker()); // Efek hover
+                button.setBackground(bgColor.darker());
             }
 
             @Override
@@ -216,27 +206,11 @@ public class AdminDashboard extends JFrame {
         });
     }
 
-    // Main method untuk pengujian mandiri (opsional, bisa dihapus nanti)
     public static void main(String[] args) {
-        // Untuk testing, pastikan database dan admin sudah ada
         DatabaseHelper.createNewDatabase();
         DatabaseHelper.createTables();
         DatabaseHelper.addDefaultAdmin();
 
-        // Buat dummy user dan produk jika belum ada untuk membuat pesanan
-        // Ini untuk memastikan ada data pesanan yang bisa dilihat
-        // Anda bisa membuat pesanan manual melalui HalamanPembayaran atau tambahkan dummy di sini
-        // Misalnya:
-        // DatabaseHelper.registerUser("dummyuser", "123", "Alamat Dummy", "08111");
-        // User dummyUser = DatabaseHelper.authenticateUser("dummyuser", "123");
-        // Produk dummyProduct = DatabaseHelper.getProductsByCategory("BMX").get(0); // Ambil produk BMX pertama
-
-        // if (dummyUser != null && dummyProduct != null) {
-        //     DatabaseHelper.createOrder(dummyUser.getUserId(), dummyProduct.getProductId(), "Alamat Dummy", "SiCepat", "COD", dummyProduct.getPrice(), null);
-        // }
-
-
-        // Set currentUser sebagai Admin untuk testing
         Main.currentUser = DatabaseHelper.authenticateAdmin("admin", "admin123");
 
         SwingUtilities.invokeLater(() -> {

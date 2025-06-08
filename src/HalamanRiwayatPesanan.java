@@ -1,4 +1,3 @@
-// HalamanRiwayatPesanan.java
 import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.border.EmptyBorder;
@@ -6,8 +5,8 @@ import java.awt.*;
 import java.util.List;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.awt.event.MouseAdapter; // Pastikan import ini ada
-import java.awt.event.MouseEvent;   // Pastikan import ini ada
+import java.awt.event.MouseAdapter; 
+import java.awt.event.MouseEvent;  
 
 public class HalamanRiwayatPesanan extends JFrame {
 
@@ -16,8 +15,8 @@ public class HalamanRiwayatPesanan extends JFrame {
 
     public HalamanRiwayatPesanan() {
         setTitle("Riwayat Pesanan Anda");
-        setSize(900, 600); // Ukuran disesuaikan
-        setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE); // Tutup hanya jendela ini, tidak seluruh aplikasi
+        setSize(900, 600); 
+        setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE); 
         setLocationRelativeTo(null);
         setLayout(new BorderLayout(10, 10));
 
@@ -38,8 +37,8 @@ public class HalamanRiwayatPesanan extends JFrame {
         backButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                new Dashboard().setVisible(true); // Kembali ke Dashboard user
-                dispose(); // Tutup halaman riwayat ini
+                new Dashboard().setVisible(true); 
+                dispose(); 
             }
         });
         headerPanel.add(backButton, BorderLayout.EAST);
@@ -51,11 +50,10 @@ public class HalamanRiwayatPesanan extends JFrame {
         mainContentPanel.setBorder(BorderFactory.createEmptyBorder(15, 15, 15, 15));
         mainContentPanel.setBackground(Colors.BACKGROUND_PRIMARY);
 
-        // Kolom untuk tabel riwayat pesanan (sesuaikan jika perlu)
-        tableModel = new DefaultTableModel(new Object[]{"ID Pesanan", "Produk", "Tanggal", "Total Harga", "Status", "Kurir", "Alamat Pengiriman"}, 0) { // Tambahkan kolom alamat
+        tableModel = new DefaultTableModel(new Object[]{"ID Pesanan", "Produk", "Tanggal", "Total Harga", "Status", "Kurir", "Alamat Pengiriman"}, 0) { 
             @Override
             public boolean isCellEditable(int row, int column) {
-                return false; // User tidak bisa mengedit langsung
+                return false; 
             }
         };
         historyTable = new JTable(tableModel);
@@ -73,22 +71,17 @@ public class HalamanRiwayatPesanan extends JFrame {
 
         add(mainContentPanel, BorderLayout.CENTER);
 
-        // Muat data riwayat pesanan saat halaman dibuka
         loadOrderHistory();
     }
 
-    // Metode untuk memuat riwayat pesanan user yang sedang login
     private void loadOrderHistory() {
-        tableModel.setRowCount(0); // Hapus baris yang ada
+        tableModel.setRowCount(0); 
         if (Main.currentUser != null) {
             List<Pesanan> userOrders = DatabaseHelper.getOrdersByUserId(Main.currentUser.getUserId());
 
             if (userOrders.isEmpty()) {
                 System.out.println("Tidak ada riwayat pesanan ditemukan untuk user ini.");
-                // Opsional: tampilkan pesan di UI jika tabel kosong
-                // JLabel noOrderLabel = new JLabel("Anda belum memiliki riwayat pesanan.");
-                // noOrderLabel.setHorizontalAlignment(SwingConstants.CENTER);
-                // mainContentPanel.add(noOrderLabel, BorderLayout.NORTH); // Contoh
+
             } else {
                 for (Pesanan order : userOrders) {
                     String productName = (order.getProduct() != null) ? order.getProduct().getName() : "N/A";
@@ -99,18 +92,16 @@ public class HalamanRiwayatPesanan extends JFrame {
                         String.format("Rp %,.0f", order.getTotalPrice()),
                         order.getStatus(),
                         order.getCourier(),
-                        order.getShippingAddress() // Tambahkan alamat pengiriman
+                        order.getShippingAddress()
                     });
                 }
             }
         } else {
-            // Ini akan muncul jika somehow user tidak login tapi halaman ini dibuka
             JOptionPane.showMessageDialog(this, "Anda harus login untuk melihat riwayat pesanan.", "Error", JOptionPane.ERROR_MESSAGE);
             System.out.println("Tidak ada user yang sedang login untuk melihat riwayat pesanan.");
         }
     }
 
-    // Metode pembantu untuk menata gaya tombol (copy dari AdminDashboard)
     private void styleButton(JButton button, Color bgColor, Color textColor) {
         button.setBackground(bgColor);
         button.setForeground(textColor);
@@ -131,19 +122,10 @@ public class HalamanRiwayatPesanan extends JFrame {
         });
     }
 
-    // Main method untuk pengujian mandiri (opsional, bisa dihapus/dibiarkan)
     public static void main(String[] args) {
-        // Untuk testing, pastikan database dan user sudah ada
         DatabaseHelper.createNewDatabase();
         DatabaseHelper.createTables();
-        DatabaseHelper.addDefaultAdmin(); // Jika perlu admin juga
-
-        // Contoh: login sebagai user dummy untuk melihat riwayat
-        // Main.currentUser = DatabaseHelper.authenticateUser("user1", "pass1");
-        // if (Main.currentUser == null) {
-        //     DatabaseHelper.registerUser("user1", "pass1", "Alamat user1", "08123");
-        //     Main.currentUser = DatabaseHelper.authenticateUser("user1", "pass1");
-        // }
+        DatabaseHelper.addDefaultAdmin();
 
         SwingUtilities.invokeLater(() -> {
             if (Main.currentUser != null) {

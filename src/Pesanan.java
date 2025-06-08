@@ -9,8 +9,8 @@ public class Pesanan {
     private double totalPrice;
     private String vaNumber;
     private String status;
-    private User user; // Asosiasi dengan objek User
-    private Produk product; // Asosiasi dengan objek Produk
+    private User user; 
+    private Produk product; 
 
     // Konstruktor utama
     public Pesanan(int orderId, int userId, int productId, String orderDate,
@@ -28,7 +28,6 @@ public class Pesanan {
         this.status = status;
     }
 
-    // Konstruktor dengan objek User dan Produk untuk kemudahan (akan dipopulasi dari DB)
     public Pesanan(int orderId, User user, Produk product, String orderDate,
                    String shippingAddress, String courier, String paymentMethod,
                    double totalPrice, String vaNumber, String status) {
@@ -42,7 +41,6 @@ public class Pesanan {
         this.totalPrice = totalPrice;
         this.vaNumber = vaNumber;
         this.status = status;
-        // Pastikan ID juga diset dari objek jika diperlukan, meskipun duplikasi dari objek
         this.userId = (user != null) ? user.getUserId() : 0;
         this.productId = (product != null) ? product.getProductId() : 0;
     }
@@ -61,9 +59,8 @@ public class Pesanan {
     public User getUser() { return user; }
     public Produk getProduct() { return product; }
 
-    // --- Setters (khusus untuk atribut yang mungkin diubah oleh admin) ---
+    // --- Setters ---
     public void setStatus(String status) { this.status = status; }
-    // Anda bisa menambahkan setter untuk shippingAddress, courier, paymentMethod, vaNumber jika admin bisa mengeditnya juga
     public void setShippingAddress(String shippingAddress) { this.shippingAddress = shippingAddress; }
     public void setCourier(String courier) { this.courier = courier; }
     public void setPaymentMethod(String paymentMethod) { this.paymentMethod = paymentMethod; }

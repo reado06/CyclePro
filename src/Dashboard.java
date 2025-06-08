@@ -4,36 +4,32 @@ import java.awt.event.MouseEvent;
 import javax.swing.*;
 import javax.swing.border.Border;
 import javax.swing.border.EmptyBorder;
-// Pastikan semua import yang diperlukan ada
-// import java.awt.geom.GradientPaint; // Ini tidak diperlukan jika GradientPanel tidak digunakan
 
 public class Dashboard extends JFrame {
 
     public Dashboard() {
         setTitle("Dashboard - CyclePro");
-        setSize(900, 700); // Ukuran dashboard lebih besar untuk tampilan yang menarik
+        setSize(900, 700);
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setLocationRelativeTo(null);
         setLayout(new BorderLayout(0, 0));
-        getContentPane().setBackground(Colors.BACKGROUND_PRIMARY); // Warna background utama dari Colors.java
+        getContentPane().setBackground(Colors.BACKGROUND_PRIMARY);
 
-        // --- Top Header Panel (menggunakan JPanel standar dengan warna solid) ---
-        JPanel headerPanel = new JPanel(); // Kembali ke JPanel standar
-        headerPanel.setBackground(Colors.NAVBAR_BACKGROUND); // Menggunakan warna solid dari Colors.java
+        JPanel headerPanel = new JPanel();
+        headerPanel.setBackground(Colors.NAVBAR_BACKGROUND);
         headerPanel.setLayout(new BorderLayout(15, 0));
         headerPanel.setBorder(new EmptyBorder(10, 20, 10, 20));
 
         JLabel appTitleLabel = new JLabel("CYCLEPRO");
         appTitleLabel.setFont(new Font("Arial", Font.BOLD, 28));
-        appTitleLabel.setForeground(Colors.NAVBAR_TEXT); // Warna teks navbar dari Colors.java
+        appTitleLabel.setForeground(Colors.NAVBAR_TEXT);
         headerPanel.add(appTitleLabel, BorderLayout.WEST);
 
         JPanel userInfoPanel = new JPanel(new FlowLayout(FlowLayout.RIGHT, 15, 0));
-        userInfoPanel.setOpaque(false); // Transparan agar background header terlihat
+        userInfoPanel.setOpaque(false);
 
-        // --- TOMBOL RIWAYAT PESANAN BARU ---
         JButton historyButton = new JButton("Riwayat Pesanan");
-        historyButton.setBackground(Colors.BUTTON_PRIMARY_BACKGROUND); // Gunakan warna yang sesuai
+        historyButton.setBackground(Colors.BUTTON_PRIMARY_BACKGROUND);
         historyButton.setForeground(Colors.BUTTON_PRIMARY_TEXT);
         historyButton.setFont(new Font("Arial", Font.BOLD, 12));
         historyButton.setFocusPainted(false);
@@ -41,48 +37,47 @@ public class Dashboard extends JFrame {
         historyButton.addActionListener(e -> {
             if (Main.currentUser != null) {
                 new HalamanRiwayatPesanan().setVisible(true);
-                dispose(); // Tutup dashboard saat membuka riwayat
+                dispose();
             } else {
                 JOptionPane.showMessageDialog(this, "Silakan login untuk melihat riwayat pesanan.", "Peringatan", JOptionPane.WARNING_MESSAGE);
             }
         });
-        userInfoPanel.add(historyButton); // Tambahkan tombol ini di userInfoPanel
+        userInfoPanel.add(historyButton);
 
-        String username = (Main.currentUser != null) ? Main.currentUser.getUsername() : "Guest"; // Ambil username dari Main.currentUser
+        String username = (Main.currentUser != null) ? Main.currentUser.getUsername() : "Guest";
         JLabel profileLabel = new JLabel("Halo, " + username + "!");
-        profileLabel.setForeground(Colors.NAVBAR_TEXT); // Warna teks navbar dari Colors.java
+        profileLabel.setForeground(Colors.NAVBAR_TEXT);
         profileLabel.setFont(new Font("Arial", Font.BOLD, 14));
         userInfoPanel.add(profileLabel);
 
         JButton logoutButton = new JButton("Logout");
-        logoutButton.setBackground(Colors.BUTTON_DANGER_BACKGROUND); // Warna tombol bahaya dari Colors.java
-        logoutButton.setForeground(Colors.BUTTON_DANGER_TEXT); // Warna teks tombol bahaya dari Colors.java
+        logoutButton.setBackground(Colors.BUTTON_DANGER_BACKGROUND);
+        logoutButton.setForeground(Colors.BUTTON_DANGER_TEXT);
         logoutButton.setFont(new Font("Arial", Font.BOLD, 12));
-        logoutButton.setFocusPainted(false); // Hilangkan border fokus
+        logoutButton.setFocusPainted(false);
         logoutButton.setCursor(new Cursor(Cursor.HAND_CURSOR));
         logoutButton.addActionListener(e -> {
-            Main.currentUser = null; // Logout pengguna
-            new HalamanLogin().setVisible(true); // Kembali ke halaman login
+            Main.currentUser = null;
+            new HalamanLogin().setVisible(true);
             dispose();
         });
         userInfoPanel.add(logoutButton);
         headerPanel.add(userInfoPanel, BorderLayout.EAST);
         add(headerPanel, BorderLayout.NORTH);
 
-        // --- Main Content Panel (Categories) ---
         JPanel mainContentPanel = new JPanel(new BorderLayout());
-        mainContentPanel.setBackground(Colors.BACKGROUND_PRIMARY); // Warna background utama dari Colors.java
-        mainContentPanel.setBorder(new EmptyBorder(25, 25, 25, 25)); // Padding ke dalam
+        mainContentPanel.setBackground(Colors.BACKGROUND_PRIMARY);
+        mainContentPanel.setBorder(new EmptyBorder(25, 25, 25, 25));
 
         JLabel chooseCategoryLabel = new JLabel("Pilih Kategori Sepeda:");
         chooseCategoryLabel.setFont(new Font("Arial", Font.BOLD, 20));
-        chooseCategoryLabel.setForeground(Colors.TEXT_PRIMARY); // Warna teks utama dari Colors.java
+        chooseCategoryLabel.setForeground(Colors.TEXT_PRIMARY);
         mainContentPanel.add(chooseCategoryLabel, BorderLayout.NORTH);
 
         JPanel categoriesPanel = new JPanel();
-        categoriesPanel.setLayout(new BoxLayout(categoriesPanel, BoxLayout.Y_AXIS)); // Layout vertikal untuk kartu
-        categoriesPanel.setBackground(Colors.BACKGROUND_PRIMARY); // Warna background utama dari Colors.java
-        categoriesPanel.setBorder(new EmptyBorder(20, 0, 0, 0)); // Padding atas
+        categoriesPanel.setLayout(new BoxLayout(categoriesPanel, BoxLayout.Y_AXIS));
+        categoriesPanel.setBackground(Colors.BACKGROUND_PRIMARY);
+        categoriesPanel.setBorder(new EmptyBorder(20, 0, 0, 0));
 
         String[] bikeTypes = {"Sepeda BMX", "Sepeda Gunung", "Sepeda Lipat"};
         String[] categoriesDB = {"BMX", "Gunung", "Lipat"};
@@ -97,26 +92,26 @@ public class Dashboard extends JFrame {
             final String categoryDBName = categoriesDB[i];
             final String imagePath = imagePaths[i];
 
-            JPanel categoryItemPanel = new JPanel(new BorderLayout(20, 0)); // Gunakan BorderLayout untuk gambar dan teks
-            categoryItemPanel.setBackground(Colors.BACKGROUND_SECONDARY); // Warna background sekunder dari Colors.java
-            // Border default untuk kartu
+            JPanel categoryItemPanel = new JPanel(new BorderLayout(20, 0));
+            categoryItemPanel.setBackground(Colors.BACKGROUND_SECONDARY);
+            
             Border defaultBorder = BorderFactory.createCompoundBorder(
-                BorderFactory.createLineBorder(Colors.BORDER_COLOR, 1), // Border
-                BorderFactory.createEmptyBorder(15, 15, 15, 15) // Padding internal
+                BorderFactory.createLineBorder(Colors.BORDER_COLOR, 1),
+                BorderFactory.createEmptyBorder(15, 15, 15, 15)
             );
-            categoryItemPanel.setBorder(defaultBorder); // Set border default di sini
+            categoryItemPanel.setBorder(defaultBorder);
 
-            categoryItemPanel.setMaximumSize(new Dimension(Integer.MAX_VALUE, 150)); // Tinggi maksimum untuk kartu
+            categoryItemPanel.setMaximumSize(new Dimension(Integer.MAX_VALUE, 150));
 
             JLabel imageLabel = new JLabel();
-            imageLabel.setPreferredSize(new Dimension(120, 120)); // Ukuran gambar dalam kartu
+            imageLabel.setPreferredSize(new Dimension(120, 120));
             imageLabel.setHorizontalAlignment(SwingConstants.CENTER);
             imageLabel.setVerticalAlignment(SwingConstants.CENTER);
             try {
                 java.net.URL imgUrl = getClass().getResource(imagePath);
                 if (imgUrl != null) {
                     ImageIcon bikeIcon = new ImageIcon(imgUrl);
-                    Image image = bikeIcon.getImage().getScaledInstance(100, 100, Image.SCALE_SMOOTH); // Skala gambar
+                    Image image = bikeIcon.getImage().getScaledInstance(100, 100, Image.SCALE_SMOOTH);
                     imageLabel.setIcon(new ImageIcon(image));
                 } else {
                     System.err.println("Gambar kategori tidak ditemukan: " + imagePath);
@@ -133,49 +128,45 @@ public class Dashboard extends JFrame {
             categoryItemPanel.add(imageLabel, BorderLayout.WEST);
 
             JLabel categoryLabelText = new JLabel(categoryName);
-            categoryLabelText.setFont(new Font("Arial", Font.BOLD, 22)); // Font lebih besar
-            categoryLabelText.setForeground(Colors.TEXT_PRIMARY); // Warna teks utama dari Colors.java
+            categoryLabelText.setFont(new Font("Arial", Font.BOLD, 22));
+            categoryLabelText.setForeground(Colors.TEXT_PRIMARY);
             categoryItemPanel.add(categoryLabelText, BorderLayout.CENTER);
 
-            // Efek hover untuk kartu
             categoryItemPanel.setCursor(new Cursor(Cursor.HAND_CURSOR));
             categoryItemPanel.addMouseListener(new MouseAdapter() {
-                // Simpan referensi warna teks asli untuk dikembalikan nanti
                 Color originalTextForeground = categoryLabelText.getForeground();
 
                 @Override
                 public void mouseClicked(MouseEvent e) {
-                    new KategoriSepeda(categoryDBName).setVisible(true); // Navigasi ke KategoriSepeda
+                    new KategoriSepeda(categoryDBName).setVisible(true);
                     dispose();
                 }
                 @Override
                 public void mouseEntered(MouseEvent e) {
-                    // Warna kuning/cream saat hover
-                    categoryItemPanel.setBackground(Colors.BUTTON_GOLD_BACKGROUND); // Menggunakan warna emas
-                    categoryLabelText.setForeground(Color.WHITE); // Ubah warna teks menjadi putih untuk kontras
+                    categoryItemPanel.setBackground(Colors.BUTTON_GOLD_BACKGROUND);
+                    categoryLabelText.setForeground(Color.WHITE);
 
-                    // Efek pop-up: border menjadi lebih tebal dan warna berbeda
                     categoryItemPanel.setBorder(BorderFactory.createCompoundBorder(
-                        BorderFactory.createLineBorder(Colors.BUTTON_GOLD_BACKGROUND.darker(), 3), // Border lebih tebal, warna lebih gelap dari emas
+                        BorderFactory.createLineBorder(Colors.BUTTON_GOLD_BACKGROUND.darker(), 3),
                         BorderFactory.createEmptyBorder(15, 15, 15, 15)
                     ));
                 }
 
                 @Override
                 public void mouseExited(MouseEvent e) {
-                    categoryItemPanel.setBackground(Colors.BACKGROUND_SECONDARY); // Kembali ke warna semula
-                    categoryLabelText.setForeground(originalTextForeground); // Kembali ke warna teks semula
-                    categoryItemPanel.setBorder(defaultBorder); // Kembali ke border default
+                    categoryItemPanel.setBackground(Colors.BACKGROUND_SECONDARY);
+                    categoryLabelText.setForeground(originalTextForeground);
+                    categoryItemPanel.setBorder(defaultBorder);
                 }
             });
             categoriesPanel.add(categoryItemPanel);
-            categoriesPanel.add(Box.createRigidArea(new Dimension(0, 20))); // Spasi antar kartu
+            categoriesPanel.add(Box.createRigidArea(new Dimension(0, 20)));
         }
 
         JScrollPane scrollPane = new JScrollPane(categoriesPanel);
         scrollPane.setBorder(BorderFactory.createEmptyBorder());
         scrollPane.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED);
-        scrollPane.getVerticalScrollBar().setUnitIncrement(16); // Scroll lebih halus
+        scrollPane.getVerticalScrollBar().setUnitIncrement(16);
         mainContentPanel.add(scrollPane, BorderLayout.CENTER);
         
         add(mainContentPanel, BorderLayout.CENTER);
